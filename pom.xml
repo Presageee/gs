@@ -5,18 +5,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.gs</groupId>
-    <artifactId>app</artifactId>
+    <artifactId>gs</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1</version>
     <modules>
-        <module>gs-core</module>
+        <module>gs-core-v1</module>
         <module>gs-cache</module>
         <module>gs-common</module>
         <module>gs-script-engine</module>
+        <module>gs-core-kcp</module>
     </modules>
 
     <properties>
-        <netty.version>4.1.6.Final</netty.version>
+        <netty.version>4.1.7.Final</netty.version>
         <spring.version>5.0.0.RELEASE</spring.version>
         <logback.version>1.2.3</logback.version>
         <slf4j.version>1.7.25</slf4j.version>
