@@ -24,6 +24,7 @@
         <lombok.version>1.16.18</lombok.version>
         <redis.version>2.9.0</redis.version>
         <codec.version>1.10</codec.version>
+        <kcp.version>1.2.6</kcp.version>
     </properties>
 
     <dependencies>
@@ -134,6 +135,13 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
+            </dependency>
+
+            <!-- kcp -->
+            <dependency>
+                <groupId>org.beykery</groupId>
+                <artifactId>jkcp</artifactId>
+                <version>${kcp.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

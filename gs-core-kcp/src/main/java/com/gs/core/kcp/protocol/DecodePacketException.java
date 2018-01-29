@@ -6,4 +6,10 @@ package com.gs.core.kcp.protocol;
  */
 public class DecodePacketException extends Exception {
 
+    public DecodePacketException() {
+    }
+
+    public DecodePacketException(Throwable cause) {
+        super(cause);
+    }
 }
