@@ -1,6 +1,9 @@
-package com.gs.core.protocol;
+package com.gs.core.kcp.protocol;
 
-import com.server.scenecalc.utils.ByteConvertUtil;
+
+import com.gs.common.util.ByteConvertUtils;
+import com.gs.core.kcp.constant.KcpConstants;
+import org.beykery.jkcp.KcpClient;
 
 import java.util.BitSet;
 
@@ -10,25 +13,28 @@ import java.util.BitSet;
  */
 public class Header {
     /*
-
+     由于国内网络问题，单个MTU最好不超过512字节
      byte[12] head {
-     bit[16] magic;//魔数 2字节
-     bit[32] sessionId;// 会话id 21位，范围为0~2097152
-     bit[3] control;//业务控制位，1为心跳，2为中断，3未回包，剩余业务自定义
-     bit[13] payload;//冗余拓展字段 1字节
-     bit[32] length;//长度 4字节
+         bit[16] magic;//魔数 2字节
+         bit[32] sessionId;// 会话id 32位，范围为int的大小
+         bit[3] control;//业务控制位范围为0~8，1为心跳，2为中断，3为回包，剩余业务自定义
+         bit[10] businessId;//业务Id 0~1024, 0~200为引擎用指令，201~299为预留，300~1024为业务使用
+         bit[3] payload;//冗余拓展字段 0~8
+         bit[32] length;//长度 4字节
      }
 
-     至此数据包长度则为1462字节。
+     至此数据包长度则为500字节。
 
      //sessionID 实现为 int => byte => java.util.BitSet 去除前3位
      //control 实现为 int => byte => 去除前29位
      */
-    private short magic = 0xff;
+    private short magic = KcpConstants.MAGIC;
 
     private int sessionId;
 
     private int control;
+
+    private int businessId;
 
     private int payload;
 
@@ -37,9 +43,10 @@ public class Header {
     public Header() {
     }
 
-    public Header(int sessionId, int control, int payload, int length) {
+    public Header(int sessionId, int control, int businessId, int payload, int length) {
         this.sessionId = sessionId;
         this.control = control;
+        this.businessId = businessId;
         this.payload = payload;
         this.length = length;
     }
@@ -76,48 +83,38 @@ public class Header {
         this.length = length;
     }
 
+    public int getBusinessId() {
+        return businessId;
+    }
+
+    public void setBusinessId(int businessId) {
+        this.businessId = businessId;
+    }
+
     //sessionId to bit,control to bit,payload to bit,length to bit
     private BitSet sessionIdToBitSet() {
-        BitSet original = ByteConvertUtil.intToBitSet(sessionId);
-
-//        BitSet sessionBit = new BitSet();
-//        for (int i = 11; i < 32; i++) {
-//            if (original.get(i)) {
-//                sessionBit.set(i);
-//            }
-//        }
-//
-//        return sessionBit;
-        return original;
+        return ByteConvertUtils.intToBitSet(sessionId);
     }
 
     private BitSet bitSetToSessionIdBit(BitSet middleBit) {
         BitSet sessionBit = new BitSet();
 
-//        int index = 11;
-//        for (int i = 0; i < 21; i++) {
-//            if (middleBit.get(i)) {
-//                sessionBit.set(index);
-//            }
-//
-//            index ++;
-//        }
         int index = 0;
         for (int i = 0; i < 32; i++) {
             if (middleBit.get(i)) {
                 sessionBit.set(index);
             }
 
-            index ++;
+            index++;
         }
         return sessionBit;
     }
 
     private BitSet controlToBitSet() {
-        BitSet original = ByteConvertUtil.intToBitSet(control);
+        BitSet original = ByteConvertUtils.intToBitSet(control);
 
         BitSet controlBit = new BitSet();
-        for (int i = 29; i< 32; i++) {
+        for (int i = 29; i < 32; i++) {
             if (original.get(i)) {
                 controlBit.set(i);
             }
@@ -129,37 +126,51 @@ public class Header {
     private BitSet bitSetToControlBit(BitSet middleBit) {
         BitSet controlBit = new BitSet();
 
-//        int index = 29;
-//        for (int i = 21; i < 24; i++) {
-//            if (middleBit.get(i)) {
-//                controlBit.set(index);
-//            }
-//
-//            index ++;
-//        }
         int index = 29;
         for (int i = 32; i < 35; i++) {
             if (middleBit.get(i)) {
                 controlBit.set(index);
             }
 
-            index ++;
+            index++;
         }
 
         return controlBit;
     }
 
-    private BitSet payloadToBitSet() {
-        BitSet original = ByteConvertUtil.intToBitSet(payload);
+    private BitSet businessIdToBitSet() {
+        BitSet original = ByteConvertUtils.intToBitSet(businessId);
 
-//        BitSet payloadBit = new BitSet();
-//        for (int i = 24; i < 32; i++) {
-//            if (original.get(i)) {
-//                payloadBit.set(i);
-//            }
-//        }
+        BitSet businessBit = new BitSet();
+        for (int i = 22; i < 32; i++) {
+            if (original.get(i)) {
+                businessBit.set(i);
+            }
+        }
+
+        return businessBit;
+    }
+
+    private BitSet bitSetToBusinessIdSet(BitSet middleBit) {
+        BitSet businessBit = new BitSet();
+
+        int index = 22;
+        for (int i = 35; i < 45; i++) {
+            if (middleBit.get(i)) {
+                businessBit.set(index);
+            }
+
+            index++;
+        }
+
+        return businessBit;
+    }
+
+    private BitSet payloadToBitSet() {
+        BitSet original = ByteConvertUtils.intToBitSet(payload);
+
         BitSet payloadBit = new BitSet();
-        for (int i = 19; i < 32; i++) {
+        for (int i = 29; i < 32; i++) {
             if (original.get(i)) {
                 payloadBit.set(i);
             }
@@ -171,21 +182,13 @@ public class Header {
     private BitSet bitSetToPayloadBit(BitSet middleBit) {
         BitSet payloadBit = new BitSet();
 
-//        int index = 24;
-//        for (int i = 24; i < 32; i++) {
-//            if (middleBit.get(i)) {
-//                payloadBit.set(index);
-//            }
-//
-//            index ++;
-//        }
-        int index = 19;
-        for (int i = 35; i < 48; i++) {
+        int index = 29;
+        for (int i = 45; i < 48; i++) {
             if (middleBit.get(i)) {
                 payloadBit.set(index);
             }
 
-            index ++;
+            index++;
         }
 
         return payloadBit;
@@ -194,43 +197,18 @@ public class Header {
     private byte[] mergeBitSet() {
         BitSet sessionBit = sessionIdToBitSet();
         BitSet controlBit = controlToBitSet();
+        BitSet businessIdBit = businessIdToBitSet();
         BitSet payloadBit = payloadToBitSet();
 
         BitSet bits = new BitSet();
         int index = 0;
 
-//        //add sessionId
-//        for (int i = 11; i< 32; i++) {
-//            if (sessionBit.get(i)) {
-//                bits.set(index);
-//            }
-//            index ++;
-//        }
-//
-//        //add control
-//        for (int i = 29; i < 32; i++) {
-//            if (controlBit.get(i)) {
-//                bits.set(index);
-//            }
-//
-//            index ++;
-//        }
-//
-//        //add payload
-//        for (int i = 24; i < 32; i++) {
-//            if (payloadBit.get(i)) {
-//                bits.set(index);
-//            }
-//
-//            index ++;
-//        }
-
         //add sessionId
-        for (int i = 0; i< 32; i++) {
+        for (int i = 0; i < 32; i++) {
             if (sessionBit.get(i)) {
                 bits.set(index);
             }
-            index ++;
+            index++;
         }
 
         //add control
@@ -239,34 +217,43 @@ public class Header {
                 bits.set(index);
             }
 
+            index++;
+        }
+
+        //add businessId
+        for (int i = 22; i < 32; i++) {
+            if (businessIdBit.get(i)) {
+                bits.set(index);
+            }
             index ++;
         }
 
         //add payload
-        for (int i = 19; i < 32; i++) {
+        for (int i = 29; i < 32; i++) {
             if (payloadBit.get(i)) {
                 bits.set(index);
             }
 
-            index ++;
+            index++;
         }
 
-        return ByteConvertUtil.bitSetToByte(bits);
+        return ByteConvertUtils.bitSetToByte(bits);
     }
 
     private void decodeMiddleBitSet(BitSet middleBit) {
         BitSet sessionIdBit = bitSetToSessionIdBit(middleBit);
         BitSet controlBit = bitSetToControlBit(middleBit);
+        BitSet businessIdSet = bitSetToBusinessIdSet(middleBit);
         BitSet payloadBit = bitSetToPayloadBit(middleBit);
 
-        sessionId = ByteConvertUtil.BitSetToInt(sessionIdBit);
-        control = ByteConvertUtil.BitSetToInt(controlBit);
-        payload = ByteConvertUtil.BitSetToInt(payloadBit);
+        sessionId = ByteConvertUtils.BitSetToInt(sessionIdBit);
+        control = ByteConvertUtils.BitSetToInt(controlBit);
+        payload = ByteConvertUtils.BitSetToInt(payloadBit);
     }
 
     public byte[] encode() {
-        byte[] magicByte = ByteConvertUtil.shortToByteArray(magic);
-        byte[] lengthByte = ByteConvertUtil.intToByteArray(length);
+        byte[] magicByte = ByteConvertUtils.shortToByteArray(magic);
+        byte[] lengthByte = ByteConvertUtils.intToByteArray(length);
         byte[] middleByte = mergeBitSet();
 
         byte[] head = new byte[12];
@@ -276,7 +263,7 @@ public class Header {
         System.arraycopy(magicByte, 0, head, index, magicByte.length);
         index += magicByte.length;
 
-        //sessionId, control, payload
+        //sessionId, control, businessId, payload
         System.arraycopy(middleByte, 0, head, index, 6);
         index += 6;
 
@@ -293,7 +280,7 @@ public class Header {
         System.arraycopy(head, index, magicByte, 0, 2);
         index += 2;
 
-        short tmpMagic = ByteConvertUtil.byteToShort(magicByte);
+        short tmpMagic = ByteConvertUtils.byteToShort(magicByte);
         if (tmpMagic != magic) {
             throw new DecodePacketException();
         }
@@ -301,11 +288,17 @@ public class Header {
         byte[] middleByte = new byte[6];
         System.arraycopy(head, index, middleByte, 0, 6);
         index += 6;
-        decodeMiddleBitSet(ByteConvertUtil.byteToBitSet(middleByte));
+        decodeMiddleBitSet(ByteConvertUtils.byteToBitSet(middleByte));
 
         byte[] lengthByte = new byte[4];
         System.arraycopy(head, index, lengthByte, 0, 4);
-        length = ByteConvertUtil.byteToInt(lengthByte);
+        length = ByteConvertUtils.byteToInt(lengthByte);
+    }
+
+    public void validate() throws DecodePacketException {
+        if (magic != KcpConstants.MAGIC) {
+            throw new DecodePacketException();
+        }
     }
 
 }
