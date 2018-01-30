@@ -1,6 +1,8 @@
 package com.gs.core.kcp;
 
 import com.gs.core.kcp.protocol.CommonProtocol;
+import lombok.Getter;
+import lombok.Setter;
 import org.beykery.jkcp.KcpOnUdp;
 
 /**
@@ -8,8 +10,16 @@ import org.beykery.jkcp.KcpOnUdp;
  * email: ljt1343@gmail.com
  */
 public class DataPacket {
+    @Getter
+    @Setter
+    private int serviceId;
+
+    @Getter
+    @Setter
     private CommonProtocol  protocol;
 
+    @Getter
+    @Setter
     private KcpOnUdp kcpOnUdp;
 
     public DataPacket() {
@@ -20,19 +30,9 @@ public class DataPacket {
         this.kcpOnUdp = kcpOnUdp;
     }
 
-    public CommonProtocol getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(CommonProtocol protocol) {
+    public DataPacket(int serviceId, CommonProtocol protocol, KcpOnUdp kcpOnUdp) {
+        this.serviceId = serviceId;
         this.protocol = protocol;
-    }
-
-    public KcpOnUdp getKcpOnUdp() {
-        return kcpOnUdp;
-    }
-
-    public void setKcpOnUdp(KcpOnUdp kcpOnUdp) {
         this.kcpOnUdp = kcpOnUdp;
     }
 }

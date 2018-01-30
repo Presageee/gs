@@ -1,6 +1,5 @@
 package com.gs.core.kcp;
 
-import com.gs.core.kcp.protocol.DecodePacketException;
 import io.netty.buffer.ByteBuf;
 
 /**
