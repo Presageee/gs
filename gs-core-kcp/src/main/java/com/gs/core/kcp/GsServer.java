@@ -1,17 +1,15 @@
 package com.gs.core.kcp;
 
-import com.gs.common.util.AESUtils;
-import com.gs.core.kcp.protocol.CommonProtocol;
+import com.gs.core.kcp.filterchain.InputFilterChain;
+import com.gs.core.kcp.filterchain.OutputFilterChain;
 import com.gs.core.kcp.protocol.DecodePacketException;
-import com.gs.core.kcp.protocol.Header;
-import com.gs.core.kcp.protocol.SessionIdGenerator;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.beykery.jkcp.KcpOnUdp;
 import org.beykery.jkcp.KcpServer;
 
-import java.nio.charset.Charset;
 
 /**
  * Created by linjuntan on 2018/1/8.
@@ -20,6 +18,23 @@ import java.nio.charset.Charset;
 @Slf4j
 public class GsServer extends KcpServer {
 
+    @Getter
+    @Setter
+    private PacketInHandler inHandler;
+
+    @Getter
+    @Setter
+    private PacketOutHandler outHandler;
+
+    @Getter
+    @Setter
+    private InputFilterChain inputFilterChain;
+
+    @Getter
+    @Setter
+    private OutputFilterChain outputFilterChain;
+
+
     public GsServer(int port, int workerSize) {
         super(port, workerSize);
 
@@ -27,30 +42,32 @@ public class GsServer extends KcpServer {
 
     @Override
     public void handleReceive(ByteBuf byteBuf, KcpOnUdp kcpOnUdp) {
-        if (!byteBuf.hasArray()) {
-            int size = byteBuf.readableBytes();
-            byte[] data = new byte[size];
-
-            byteBuf.getBytes(0, data);
-
-            CommonProtocol protocol = new CommonProtocol();
-            try {
-                protocol.decode(data);
-                protocol.getHeader().validate();
-            } catch (DecodePacketException e) {
-                log.error(" >>> decode packet error,", e);
-            }
-
-            byte[] decryptData = AESUtils.decrypt(protocol.getBody());
-            log.info(" >>> content is  {}, kcp is {}", new String(decryptData, Charset.forName("UTF-8")), kcpOnUdp);
+        //1. doInputFilter
+        if (inputFilterChain != null && !inputFilterChain.getInFilters().isEmpty()) {
+            inputFilterChain.doFilter(byteBuf, kcpOnUdp);
         }
-        byte[] send = new String("server send").getBytes();
-        byte[] encrD = AESUtils.encrypt(send);
-        Header header = new Header(SessionIdGenerator.generateSessionId(), 5, 1, 1, encrD.length);
-        CommonProtocol protocol = new CommonProtocol(header, encrD);
-        ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(2048);
-        buf.writeBytes(protocol.toByte());
-        kcpOnUdp.send(buf);
+
+        //2. decode packet
+        DataPacket packet;
+        try {
+            packet = inHandler.decode(byteBuf, kcpOnUdp);
+        } catch (DecodePacketException e) {
+            log.error(" >>> packet decode error,", e);
+            return;
+        }
+
+        if (packet == null) {
+            return;
+        }
+
+        //3. serviceListener handler
+        ServiceListener listener = ServiceHandler.getServiceListener(packet.getServiceId());
+        if (listener == null) {
+            log.error(" >>> no such serviceListener");
+            return;
+        }
+
+        listener.handler(packet);
     }
 
     @Override
@@ -64,13 +81,44 @@ public class GsServer extends KcpServer {
         log.info("waitSnd:" + kcpOnUdp.getKcp().waitSnd());
     }
 
-    public static void main(String[] args) {
-        GsServer gs = new GsServer(6666, 4);
-        gs.noDelay(1, 10, 2, 1);
-        gs.setMinRto(10);
-        gs.wndSize(64, 64);
-        gs.setTimeout(10 * 1000);
-        gs.setMtu(512);
-        gs.start();
+    /**
+     * 发送数据
+     * @param control 控制位
+     * @param serviceId 业务指令Id
+     * @param paylaod 冗余位
+     * @param packet 待发送包
+     */
+    public void send(int control, int serviceId, int payload, AbstractPacket packet, KcpOnUdp kcpOnUdp) {
+        //1. create ByteBuf
+        ByteBuf buffer = outHandler.encode(control, serviceId, payload, packet);
+
+        //2. do OutputFilter
+        if (outputFilterChain != null && outputFilterChain.getOutFilters().isEmpty()) {
+            outputFilterChain.doFilter(buffer, null);
+        }
+
+        //3, send data
+        send(buffer, kcpOnUdp);
+        log.debug(" >>> send data on {}", kcpOnUdp);
     }
+
+    /**
+     * 发送数据
+     * @param control 控制位
+     * @param serviceId 业务指令Id
+     * @param packet 待发送包
+     */
+    public void send(int control, int serviceId, AbstractPacket packet, KcpOnUdp kcpOnUdp) {
+        send(control, serviceId, 0, packet, kcpOnUdp);
+    }
+
+//    public static void main(String[] args) {
+//        GsServer gs = new GsServer(6666, 4);
+//        gs.noDelay(1, 10, 2, 1);
+//        gs.setMinRto(10);
+//        gs.wndSize(64, 64);
+//        gs.setTimeout(10 * 1000);
+//        gs.setMtu(512);
+//        gs.start();
+//    }
 }
