@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class ServiceHandler {
-    private static ConcurrentHashMap<Integer, ServiceListener> listenerMap;
+    private static ConcurrentHashMap<Integer, ServiceListener> listenerMap = new ConcurrentHashMap<>();
 
     public static void registerListener(int serviceId, ServiceListener listener) {
         listenerMap.putIfAbsent(serviceId, listener);
