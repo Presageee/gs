@@ -1,13 +1,13 @@
 package com.gs.script;
 
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
+import javax.script.*;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -18,16 +18,22 @@ import java.util.concurrent.locks.ReentrantLock;
  * email: ljt1343@gmail.com
  */
 @Slf4j
-public class JSEngine {
+public class NashornEngine implements JScriptEngine {
+    private final static String JS_ENGINE_NASHORN = "nashorn";
+
     private ScriptEngineManager scriptEngineManager;
 
     private ScriptEngine nashorn;
 
-    private final static String JS_ENGINE_NASHORN = "nashorn";
+    private boolean cachedScript = true;
+
+    private Map<String, CompiledScript> scriptMap = new HashMap<>(8);
+
+    private String[] initParams = new String[]{"-doe", "--global-per-engine"};
 
     private Lock lock;
 
-    public JSEngine() {
+    public NashornEngine() {
         init();
     }
 
@@ -36,8 +42,26 @@ public class JSEngine {
      */
     public void init() {
         scriptEngineManager = new ScriptEngineManager();
-        nashorn = scriptEngineManager.getEngineByName(JS_ENGINE_NASHORN);
+        NashornScriptEngineFactory factory = null;
+        for (ScriptEngineFactory f : scriptEngineManager.getEngineFactories()) {
+            if (f.getEngineName().equalsIgnoreCase("Oracle Nashorn")) {
+                factory = (NashornScriptEngineFactory)f;
+                break;
+            }
+        }
+
+        if (factory == null) {
+            throw new RuntimeException(" >>> java version not support nashorn");
+        }
+
+        nashorn = factory.getScriptEngine(initParams);
+
         lock = new ReentrantLock();
+    }
+
+    @Override
+    public void destroy() {
+        nashorn = null;
     }
 
 
@@ -48,27 +72,23 @@ public class JSEngine {
      * @return 执行结果
      * @throws Exception js不存在
      */
+    @Override
     public Object doScript(String scriptName, Map<String, Object> params) throws Exception {
         File file = new File(scriptName);
         if (!file.isFile()) {
             throw new Exception(" >>> script no exists");
         }
-        try {
-            lock.lock();
 
-            params.forEach((e, v) -> nashorn.put(e, v));
-            try {
-                return nashorn.eval(new FileReader(scriptName));
-            } catch (Exception e) {
-                log.error(" >>> execute script error", e);
-                log.error(" >>> do script error => {}", scriptName);
-            }
-
-        } finally {
-            lock.unlock();
+        if (cachedScript && scriptMap.containsKey(scriptName)) {
+            return execute(scriptMap.get(scriptName), params);
         }
 
-        return null;
+        CompiledScript cs = ((Compilable)nashorn).compile(new FileReader(scriptName));
+        if (cachedScript) {
+            scriptMap.put(scriptName, cs);
+        }
+
+        return execute(cs, params);
     }
 
     /**
@@ -79,6 +99,7 @@ public class JSEngine {
      * @return 执行结果
      * @throws Exception js不存在
      */
+    @Override
     public Object doScriptFunction(String scriptName, String function, Map<String, Object> params) throws Exception {
         File file = new File(scriptName);
         if (!file.isFile()) {
@@ -107,5 +128,27 @@ public class JSEngine {
         return null;
     }
 
-    //todo compile script, cache script
+    /**
+     * open cache script, default true
+     * @param cachedScript boolean
+     */
+    public void setCachedScript(boolean cachedScript) {
+        this.cachedScript = cachedScript;
+    }
+
+    private Object execute(CompiledScript cs, Map<String, Object> params) {
+        try {
+            lock.lock();
+            Bindings binds = new SimpleBindings();
+            binds.put("params", params);
+
+            return cs.eval(binds);
+        } catch (Exception e) {
+            log.error(" >>> execute script error", e);
+        } finally {
+            lock.unlock();
+        }
+        return null;
+    }
+
 }

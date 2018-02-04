@@ -14,6 +14,8 @@
         <module>gs-common</module>
         <module>gs-script-engine</module>
         <module>gs-core-kcp</module>
+        <module>gs-db</module>
+        <module>gs-core-web</module>
     </modules>
 
     <properties>
