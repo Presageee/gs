@@ -16,6 +16,7 @@
         <module>gs-core-kcp</module>
         <module>gs-db</module>
         <module>gs-core-web</module>
+        <module>gs-config</module>
     </modules>
 
     <properties>
@@ -91,6 +92,24 @@
                 <artifactId>spring-context</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webflux</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-bom</artifactId>
+                <version>Bismuth-RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
             <!-- log -->
             <dependency>
@@ -145,6 +164,8 @@
                 <artifactId>jkcp</artifactId>
                 <version>${kcp.version}</version>
             </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 
