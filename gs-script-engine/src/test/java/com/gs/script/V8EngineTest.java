@@ -20,8 +20,8 @@ public class V8EngineTest {
         params.put("a", 1);
         params.put("b", 2);
 
-        v8Engine.doScript("E:\\workspace\\gs\\gs-script-engine\\src\\test\\resources\\add.js"
-                , params);
+//        v8Engine.doScript(Thread.currentThread().getContextClassLoader().getResource("add.js").getPath()
+//                , params);
         v8Engine.destroy();
     }
 

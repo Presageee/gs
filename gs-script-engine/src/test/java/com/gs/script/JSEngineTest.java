@@ -20,10 +20,10 @@ public class JSEngineTest {
         params.put("b", 2);
 
         Object sum = null;
-
+//        Thread.currentThread().getContextClassLoader().getResource("add.js").getPath()
         for (int i = 0; i < 100; i++) {
             long time = System.currentTimeMillis();
-            sum = engine.doScript("E:\\workspace\\gs\\gs-script-engine\\src\\test\\resources\\add.js"
+            sum = engine.doScript(Thread.currentThread().getContextClassLoader().getResource("add.js").getPath()
                     , params);
             System.out.println(System.currentTimeMillis() - time + "  " + sum);
         }
@@ -37,7 +37,7 @@ public class JSEngineTest {
         Map<String, Object> params = new HashMap<>();
         params.put("a", 1);
         params.put("b", 2);
-        Object sum = engine.doScriptFunction("E:\\workspace\\gs\\gs-script-engine\\src\\test\\resources\\addFunction.js"
+        Object sum = engine.doScriptFunction(Thread.currentThread().getContextClassLoader().getResource("addFunction.js").getPath()
                 , "add", params);
         Assert.assertEquals(((Double) sum).intValue(), 3);
     }
