@@ -2,7 +2,6 @@ package com.gs.cache.impl;
 
 import com.gs.cache.CacheProxy;
 import com.gs.cache.CacheType;
-import com.gs.cache.LocalCacheData;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.Charset;
