@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gs-core</artifactId>
+    <artifactId>gs-core-v1</artifactId>
     <properties>
         <kcp.version>1.2.6</kcp.version>
     </properties>
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>com.gs</groupId>
             <artifactId>gs-common</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
 
