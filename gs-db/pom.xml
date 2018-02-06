@@ -38,9 +38,7 @@
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
-            <version></version>
         </dependency>
-
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>

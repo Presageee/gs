@@ -53,9 +53,9 @@ public class GsClient extends KcpClient {
             bb.writeBytes(content.getBytes(Charset.forName("utf-8")));
             tc.send(bb);
         });
-        synchronized (obj) {
-            obj.wait();
-        }
+//        synchronized (obj) {
+//            obj.wait();
+//        }
     }
 
     public static void main(String[] args) {

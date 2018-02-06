@@ -21,13 +21,13 @@ public class GsServerTest {
             gs.setMtu(512);
             gs.start();
         });
-        synchronized (obj) {
-            try {
-                obj.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+//        synchronized (obj) {
+//            try {
+//                obj.wait();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     public static void main(String[] args) {
