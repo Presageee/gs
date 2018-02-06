@@ -1,5 +1,9 @@
-package com.gs.cache;
+package com.gs.cache.config;
 
+import com.gs.cache.CacheProxy;
+import com.gs.cache.impl.LocalCacheProxyImpl;
+import com.gs.cache.impl.RedisCacheProxyImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +21,8 @@ import java.util.stream.Collectors;
  * email: ljt1343@gmail.com
  */
 @Configuration
-public class RedisConfiguration {
+@Slf4j
+public class CacheConfiguration {
     @Value("${redis.maxActive:16}")
     private int maxActive;
     @Value("${redis.maxIdle:16}")
@@ -47,10 +52,33 @@ public class RedisConfiguration {
         return jedisPoolConfig;
     }
 
-    @Bean
+    @Bean("shardedJedisPool")
     @DependsOn("jedisPoolConfig")
     public ShardedJedisPool shardedJedisPool(@Autowired JedisPoolConfig jedisPoolConfig) {
-        return new ShardedJedisPool(jedisPoolConfig,
-                Arrays.stream(jedisSharedInfo.split(",")).map(JedisShardInfo::new).collect(Collectors.toList()));
+        try {
+            ShardedJedisPool jedisPool = new ShardedJedisPool(jedisPoolConfig,
+                    Arrays.stream(jedisSharedInfo.split(",")).map(JedisShardInfo::new).collect(Collectors.toList()));
+            return jedisPool;
+        } catch (Exception e) {
+            log.error(" >>> init redis pool error", e);
+            log.error(" >>> will be use local cache");
+        }
+
+        return null;
+    }
+
+    @Bean
+    @DependsOn("shardedJedisPool")
+    public CacheProxy cacheProxy(@Autowired ShardedJedisPool shardedJedisPool) {
+        if (shardedJedisPool == null) {
+            log.info(" >>> create local cache");
+            return new LocalCacheProxyImpl();
+        }
+
+        log.info(" >>> create redis cache");
+        RedisCacheProxyImpl cacheProxy = new RedisCacheProxyImpl();
+        cacheProxy.setShardedJedisPool(shardedJedisPool);
+
+        return cacheProxy;
     }
 }

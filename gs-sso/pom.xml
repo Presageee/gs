@@ -17,6 +17,11 @@
             <artifactId>gs-core-web</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.gs</groupId>
+            <artifactId>gs-cache</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

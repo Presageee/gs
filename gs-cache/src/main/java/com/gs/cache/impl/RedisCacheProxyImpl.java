@@ -1,11 +1,14 @@
-package com.gs.cache;
+package com.gs.cache.impl;
 
+import com.gs.cache.CacheProxy;
+import com.gs.cache.CacheType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
+import java.io.Closeable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,10 +18,22 @@ import java.util.Set;
  * email: ljt1343@gmail.com
  */
 @Slf4j
-@Component
-public class RedisCacheProxy implements CacheProxy {
-    @Autowired
+public class RedisCacheProxyImpl implements CacheProxy {
+
     private ShardedJedisPool shardedJedisPool;
+
+    public ShardedJedisPool getShardedJedisPool() {
+        return shardedJedisPool;
+    }
+
+    public void setShardedJedisPool(ShardedJedisPool shardedJedisPool) {
+        this.shardedJedisPool = shardedJedisPool;
+    }
+
+    @Override
+    public CacheType getCacheType() {
+        return CacheType.REDIS;
+    }
 
     public Long append(String key, String value) {
         ShardedJedis shardedJedis = null;
@@ -557,7 +572,6 @@ public class RedisCacheProxy implements CacheProxy {
         return ret;
     }
 
-
     public String set(String key, String value) {
         ShardedJedis shardedJedis = null;
         String ret = null;
@@ -994,5 +1008,6 @@ public class RedisCacheProxy implements CacheProxy {
         }
         return ret;
     }
+
 
 }
