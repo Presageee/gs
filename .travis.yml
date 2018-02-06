@@ -4,7 +4,7 @@ jdk:
 before_install:
   - pip install --user codecov
 after_success:
-  - codecov
+  - bash <(curl -s https://codecov.io/bash) -t d08d97e1-97ac-4941-90fe-259000192f3c
 branches:
   except:
     - appveyor
