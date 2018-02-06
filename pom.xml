@@ -17,6 +17,7 @@
         <module>gs-db</module>
         <module>gs-core-web</module>
         <module>gs-config</module>
+        <module>gs-sso</module>
     </modules>
 
     <properties>
