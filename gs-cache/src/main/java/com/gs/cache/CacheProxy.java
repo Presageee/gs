@@ -9,6 +9,13 @@ import java.util.Set;
  * email: ljt1343@gmail.com
  */
 public interface CacheProxy {
+
+    /**
+     * 缓存的类型
+     * @return ENUM @see com.gs.cache.CacheType
+     */
+    CacheType getCacheType();
+
     /**
      * toString
      * @return 值
