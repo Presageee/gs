@@ -11,6 +11,7 @@ public interface SsoService {
 
     void updateUser(UserBo userBo);
 
-    UserBo validateLogin(String passport, String password);
+    UserBo login(String passport, String password);
 
+    void logout(String token);
 }
