@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gs.sso.dao.UserMapper">
+    <resultMap type="com.gs.sso.entity.User" id="DataResult">
+        <result column="id" property="id" />
+        <result column="passport" property="passport" />
+        <result column="password" property="password" />
+        <result column="username" property="username" />
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <result column="createTime" property="createTime" />
+        <result column="loginIp" property="loginIp"/>
+        <result column="lastLoginIp" property="lastLoginIp"/>
+        <result column="loginTime" property="loginTime" />
+        <result column="lastLoginTime" property="lastLoginTime" />
+        <result column="lastLogoutTime" property="lastLogoutTime"/>
+        <result column="sensitive" property="sensitive" />
+        <result column="locked" property="locked"/>
+        <result column="type" property="type"/>
+    </resultMap>
+
+    <sql id="insert">
+        passport, password, username, email, phone, createTime, loginIp, lastLoginIp, loginTime, lastLoginTime, lastLogoutTime,sensitive, locked, type
+    </sql>
+
+    <sql id="selectDetail">
+        id, passport, username, email, phone,createTime, loginIp, lastLoginIp, loginTime, lastLoginTime, lastLogoutTime,sensitive, locked, type
+    </sql>
+
+    <select id="getUserByPassport" resultMap="DataResult">
+        <![CDATA[
+          SELECT
+          ]]>
+          <include refid="selectDetail"/>
+        <![CDATA[
+           FROM UniqueUser where passport=#{passport} AND password=#{password}
+        ]]>
+    </select>
+
+    <select id="getUserById" resultMap="DataResult">
+        <![CDATA[
+          SELECT
+          ]]>
+        <include refid="selectDetail"/>
+        <![CDATA[
+           FROM UniqueUser where id=#{id}
+        ]]>
+    </select>
+
+    <select id="getPasswordByPassport" resultType="java.lang.String">
+        <![CDATA[
+          SELECT password FROM UniqueUser where passport=#{passport}
+        ]]>
+    </select>
+
+    <update id="updateUser" parameterType="com.gs.sso.entity.User">
+        <![CDATA[
+          UPDATE UnquieUser SET
+          username=#{user.username},password=#{user.password}, email=#{user.email}, phone=#{user.phone}, loginIp=#{user.loginIp},
+          lastLoginIp=#{user.lastLoginIp}, loginTime=#{user.loginTime},
+          lastLoginTime=#{user.lastLoginTime}, lastLogoutTime=#{lastLogoutTime},
+          sensitive=#{user.sensitive}, locked=#{user.locked}, type =#{user.type}
+          WHERE passport=#{user.passport}
+        ]]>
+    </update>
+
+
+    <insert id="insertUser" parameterType="com.gs.sso.entity.User">
+        <![CDATA[
+          INSERT INTO UniqueUser
+          (
+        ]]>
+        <include refid="insert"/>
+        <![CDATA[
+          ) VALUES (#{user.passport}, #{user.password},#{user.username}, #{user.email}, #{user.phone}, #{user.createTime}, #{user.loginIp}, #{user.lastLoginIp},
+          #{user.loginTime}, #{user.lastLoginTime}, #{user.lastLogoutTime}, #{user.sensitive}, #{user.locked}, #{user.type})
+        ]]>
+    </insert>
+
+</mapper>
