@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
@@ -53,6 +54,9 @@ public class ReflectUtils {
                 if (df.isAnnotationPresent(com.gs.common.annotation.Date.class)) {
                     LocalDateTime date = LocalDateTime.ofInstant(new Date((Long)sf.get(src)).toInstant(), ZoneId.systemDefault());
                     df.set(dest, date.format(dtf));
+                } else if (df.isAnnotationPresent(com.gs.common.annotation.Timestamp.class)) {
+                    LocalDateTime date = LocalDateTime.parse((CharSequence) sf.get(src), dtf);
+                    df.set(dest, date.toInstant(ZoneOffset.of("+8")).toEpochMilli());
                 } else {
                     df.set(dest, sf.get(src));
                 }

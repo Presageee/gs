@@ -7,9 +7,9 @@ import org.apache.commons.codec.digest.DigestUtils;
  * email: ljt1343@gmail.com
  */
 public class MD5Utils {
-    private final String salt = "server!@#";
+    private static final String salt = "server!@#";
 
-    public String encode(String code) {
+    public static String encode(String code) {
         if (code != null && !code.equals("")) {
             return DigestUtils.md5Hex(DigestUtils.md5Hex(code) + salt);
         }

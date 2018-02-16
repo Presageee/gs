@@ -1,6 +1,7 @@
 package com.gs.sso.service;
 
 import com.gs.sso.controller.bo.UserBo;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 
 /**
  * author: linjuntan
@@ -11,6 +12,7 @@ public interface SsoService {
 
     void updateUser(UserBo userBo);
 
-    UserBo validateLogin(String passport, String password);
+    UserBo login(String passport, String password, ServerHttpResponse response);
 
+    void logout(String token);
 }

@@ -1,5 +1,6 @@
 package com.gs.sso.entity;
 
+import com.gs.common.annotation.Timestamp;
 import lombok.Data;
 
 /**
@@ -20,16 +21,20 @@ public class User {
 
     private String phone;
 
+    @Timestamp
     private Long createTime;
 
     private String loginIp;
 
     private String lastLoginIp;
 
+    @Timestamp
     private Long loginTime;
 
+    @Timestamp
     private Long lastLoginTime;
 
+    @Timestamp
     private Long lastLogoutTime;
 
     private Long sensitive;
