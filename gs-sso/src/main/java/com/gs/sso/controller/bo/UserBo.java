@@ -42,4 +42,6 @@ public class UserBo {
 
     private Integer type;
 
+    private String token;
+
 }

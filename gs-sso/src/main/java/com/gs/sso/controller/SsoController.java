@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import reactor.core.publisher.Mono;
@@ -40,12 +41,8 @@ public class SsoController {
     }
 
     @PostMapping(name = "/login")
-    public Mono<ResponseEntity<UserBo>> login(@RequestBody LoginDto dto) {
-        UserBo userBo = ssoService.login(dto.getPassport(), dto.getPassword());
-        if (userBo == null) {
-
-        }
-
+    public Mono<ResponseEntity<UserBo>> login(@RequestBody LoginDto dto, ServerHttpResponse response) {
+        UserBo userBo = ssoService.login(dto.getPassport(), dto.getPassword(), response);
         return Mono.just(new ResponseEntity<>(userBo, HttpStatus.OK));
 
     }
