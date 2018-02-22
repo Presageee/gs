@@ -11,9 +11,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,6 +29,9 @@ import java.util.List;
  */
 @Configuration
 public class MybatisConfiguration {
+//    @Autowired
+//    private PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer;
+
     @Value("${db.name:test}")
     private String dbName;
 
@@ -35,7 +41,7 @@ public class MybatisConfiguration {
     @Value("${db.username:root}")
     private String username;
 
-    @Value("${db.password:}")
+    @Value("${db.password:root}")
     private String password;
 
     @Value("${db.driverName:com.mysql.jdbc.Driver}")
@@ -47,7 +53,7 @@ public class MybatisConfiguration {
     @Value("${db.minActive:100}")
     private int maxActive;
 
-    @Value("${db.initialSize:60000}")
+    @Value("${db.initialSize:1}")
     private int initialSize;
 
     @Value("${db.minWait:60000}")
@@ -81,8 +87,11 @@ public class MybatisConfiguration {
     private int maxOpenPreparedStatements;
 
     //,分割
-    @Value("${mapper.package:com.server.*.entity}")
+    @Value("${mapper.package:com.gs.sso.dao}")
     private String mapper;
+
+    @Value("${mapper.entity:com.gs.sso.entity}")
+    private String entity;
 
     @Bean("dbMaster")
     public DataSource druidDataSource() throws SQLException {
@@ -109,27 +118,14 @@ public class MybatisConfiguration {
         return druidDataSource;
     }
 
-    @Bean("mapperScanner")
-    public List<MapperScannerConfigurer> mapperScannerConfigurer() {
-        String[] packs = mapper.split(",");
 
-        List<MapperScannerConfigurer> configurers = new ArrayList<>();
-        Arrays.asList(packs).forEach(e -> {
-            MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
-            mapperScannerConfigurer.setBasePackage(mapper);
-            mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactory");
-            configurers.add(mapperScannerConfigurer);
-        });
-
-        return configurers;
-    }
 
     @Bean("sqlSessionFactory")
     @DependsOn("dbMaster")
     public SqlSessionFactory sqlSessionFactory(@Autowired DataSource dataSource) {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
-        bean.setTypeAliasesPackage(mapper);
+        bean.setTypeAliasesPackage(entity);
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try {
             bean.setMapperLocations(resolver.getResources("classpath:mapper/*.xml"));
@@ -146,5 +142,14 @@ public class MybatisConfiguration {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 
+//    @Bean("mapperScanner")
+//    public MapperScannerConfigurer mapperScannerConfigurer() {
+//
+//        MapperScannerConfigurer mapperScannerConfigurer = new MapperScannerConfigurer();
+//        mapperScannerConfigurer.setBasePackage(mapper);
+//        mapperScannerConfigurer.setSqlSessionFactoryBeanName("sqlSessionFactory");
+//
+//        return mapperScannerConfigurer;
+//    }
 
 }

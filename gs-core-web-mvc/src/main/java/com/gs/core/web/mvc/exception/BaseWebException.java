@@ -1,4 +1,4 @@
-package com.gs.core.web.exception;
+package com.gs.core.web.mvc.exception;
 
 import com.alibaba.fastjson.JSON;
 import lombok.Data;

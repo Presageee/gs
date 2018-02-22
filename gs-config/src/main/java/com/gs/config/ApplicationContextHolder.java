@@ -9,15 +9,15 @@ import org.springframework.stereotype.Component;
  * Created by linjuntan on 2017/10/22.
  * email: ljt1343@gmail.com
  */
-@Component
+@Component("contextHolder")
 public class ApplicationContextHolder implements ApplicationContextAware {
-    private  ApplicationContext context;
+    private static ApplicationContext context;
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         context = applicationContext;
     }
 
-    public  ApplicationContext getContext() {
+    public static ApplicationContext getContext() {
         return context;
     }
 }

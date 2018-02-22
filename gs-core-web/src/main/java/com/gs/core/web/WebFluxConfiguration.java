@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.server.reactive.HttpHandler;
 import org.springframework.http.server.reactive.ReactorHttpHandlerAdapter;
 import org.springframework.web.reactive.config.EnableWebFlux;
@@ -28,8 +29,9 @@ public class WebFluxConfiguration {
     private ApplicationContextHolder contextHolder;
 
     @Bean
+    @DependsOn("contextHolder")
     public ReactorHttpHandlerAdapter reactorHttpHandlerAdapter() {
-        HttpHandler handler = WebHttpHandlerBuilder.applicationContext(contextHolder.getContext()).build();
+        HttpHandler handler = WebHttpHandlerBuilder.applicationContext(ApplicationContextHolder.getContext()).build();
         return new ReactorHttpHandlerAdapter(handler);
     }
 
