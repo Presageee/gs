@@ -69,7 +69,7 @@ public class CacheConfiguration {
 
     @Bean
     @DependsOn("shardedJedisPool")
-    public CacheProxy cacheProxy(@Autowired ShardedJedisPool shardedJedisPool) {
+    public CacheProxy cacheProxy(@Autowired(required = false) ShardedJedisPool shardedJedisPool) {
         if (shardedJedisPool == null) {
             log.info(" >>> create local cache");
             return new LocalCacheProxyImpl();

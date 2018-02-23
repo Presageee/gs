@@ -1,6 +1,5 @@
 package com.gs.core.kcp.handler;
 
-import com.gs.common.util.AESUtils;
 import com.gs.core.kcp.DataPacket;
 import com.gs.core.kcp.PacketInHandler;
 import com.gs.core.kcp.protocol.CommonProtocol;

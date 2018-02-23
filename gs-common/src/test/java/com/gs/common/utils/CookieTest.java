@@ -1,8 +1,7 @@
-package com.gs.common.util;
+package com.gs.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 
 /**

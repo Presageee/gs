@@ -1,6 +1,6 @@
 package com.gs.core.kcp.protocol;
 
-import com.gs.common.util.AESUtils;
+import com.gs.common.utils.AESUtil;
 
 /**
  * Created by linjuntan on 2017/11/5.
@@ -70,6 +70,6 @@ public class CommonProtocol {
         byte[] encrypt = new byte[header.getLength()];
         System.arraycopy(data, 12, encrypt, 0, encrypt.length);
 
-        body = AESUtils.decrypt(encrypt);
+        body = AESUtil.decrypt(encrypt);
     }
 }

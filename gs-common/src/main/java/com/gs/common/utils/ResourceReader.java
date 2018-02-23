@@ -1,4 +1,4 @@
-package com.gs.common.util;
+package com.gs.common.utils;
 
 import java.io.File;
 import java.io.FileInputStream;

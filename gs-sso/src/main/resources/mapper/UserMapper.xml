@@ -16,26 +16,35 @@
         <result column="loginTime" property="loginTime" />
         <result column="lastLoginTime" property="lastLoginTime" />
         <result column="lastLogoutTime" property="lastLogoutTime"/>
-        <result column="sensitive" property="sensitive" />
         <result column="locked" property="locked"/>
         <result column="type" property="type"/>
     </resultMap>
 
     <sql id="insert">
-        passport, password, username, email, phone, createTime, loginIp, lastLoginIp, loginTime, lastLoginTime, lastLogoutTime,sensitive, locked, type
+        passport, password, username, email, phone, createTime, loginIp, lastLoginIp, loginTime, lastLoginTime, lastLogoutTime,  locked, type
     </sql>
 
     <sql id="selectDetail">
-        id, passport, username, email, phone,createTime, loginIp, lastLoginIp, loginTime, lastLoginTime, lastLogoutTime,sensitive, locked, type
+        id, passport, username, email, phone,createTime, loginIp, lastLoginIp, loginTime, lastLoginTime, lastLogoutTime, locked, type
     </sql>
 
-    <select id="getUserByPassport" resultMap="DataResult">
+    <select id="getUserByPassportAndPassword" resultMap="DataResult">
         <![CDATA[
           SELECT
           ]]>
           <include refid="selectDetail"/>
         <![CDATA[
            FROM UniqueUser where passport=#{passport} AND password=#{password}
+        ]]>
+    </select>
+
+    <select id="getUserByPassport" resultMap="DataResult">
+        <![CDATA[
+          SELECT
+          ]]>
+        <include refid="selectDetail"/>
+        <![CDATA[
+           FROM UniqueUser where passport=#{passport}
         ]]>
     </select>
 
@@ -55,27 +64,48 @@
         ]]>
     </select>
 
+    <select id="getCountByPassport" resultType="java.lang.Integer">
+        <![CDATA[
+          SELECT COUNT(id) FROM UniqueUser WHERE passport=#{passport}
+        ]]>
+    </select>
+
     <update id="updateUser" parameterType="com.gs.sso.entity.User">
         <![CDATA[
-          UPDATE UnquieUser SET
-          username=#{user.username},password=#{user.password}, email=#{user.email}, phone=#{user.phone}, loginIp=#{user.loginIp},
-          lastLoginIp=#{user.lastLoginIp}, loginTime=#{user.loginTime},
-          lastLoginTime=#{user.lastLoginTime}, lastLogoutTime=#{lastLogoutTime},
-          sensitive=#{user.sensitive}, locked=#{user.locked}, type =#{user.type}
+          UPDATE UniqueUser SET
+          username=#{user.username}, email=#{user.email}, phone=#{user.phone},
+           locked=#{user.locked}, type =#{user.type}
           WHERE passport=#{user.passport}
+        ]]>
+    </update>
+
+    <update id="updateInfo" parameterType="com.gs.sso.entity.User">
+        <![CDATA[
+        UPDATE UniqueUser SET
+        loginIp=#{user.loginIp},
+          lastLoginIp=#{user.lastLoginIp}, loginTime=#{user.loginTime},
+          lastLoginTime=#{user.lastLoginTime}, lastLogoutTime=#{user.lastLogoutTime}
+          WHERE passport=#{user.passport}
+        ]]>
+    </update>
+
+    <update id="updateLogoutTime">
+        <![CDATA[
+          UPDATE UniqueUser SET
+          lastLogoutTime=#{logoutTime}
+          WHERE passport=#{passport}
         ]]>
     </update>
 
 
     <insert id="insertUser" parameterType="com.gs.sso.entity.User">
         <![CDATA[
-          INSERT INTO UniqueUser
-          (
-        ]]>
+          INSERT INTO UniqueUser (
+          ]]>
         <include refid="insert"/>
         <![CDATA[
-          ) VALUES (#{user.passport}, #{user.password},#{user.username}, #{user.email}, #{user.phone}, #{user.createTime}, #{user.loginIp}, #{user.lastLoginIp},
-          #{user.loginTime}, #{user.lastLoginTime}, #{user.lastLogoutTime}, #{user.sensitive}, #{user.locked}, #{user.type})
+          )
+           VALUES (#{user.passport}, #{user.password},#{user.username}, #{user.email}, #{user.phone}, #{user.createTime}, #{user.loginIp}, #{user.lastLoginIp},#{user.loginTime}, #{user.lastLoginTime}, #{user.lastLogoutTime},  #{user.locked}, #{user.type})
         ]]>
     </insert>
 

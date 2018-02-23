@@ -1,4 +1,4 @@
-package com.gs.common.util;
+package com.gs.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,7 +15,7 @@ import java.util.Date;
  * email: ljt1343@gmail.com
  */
 @Slf4j
-public class ReflectUtils {
+public class ReflectUtil {
 
     private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -44,10 +44,10 @@ public class ReflectUtils {
      */
     @SuppressWarnings("unchecked")
     public static <S, D> void convertObject(S src, D dest) {
-        Field[] destFields = dest.getClass().getFields();
+        Field[] destFields = dest.getClass().getDeclaredFields();
         Arrays.asList(destFields).forEach(df -> {
             try {
-                Field sf = src.getClass().getField(df.getName());
+                Field sf = src.getClass().getDeclaredField(df.getName());
 
                 sf.setAccessible(true);
                 df.setAccessible(true);

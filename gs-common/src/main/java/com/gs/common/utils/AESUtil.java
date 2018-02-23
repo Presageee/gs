@@ -1,4 +1,4 @@
-package com.gs.common.util;
+package com.gs.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +14,7 @@ import java.security.SecureRandom;
  * email: ljt1343@gmail.com
  */
 @Slf4j
-public class AESUtils {
+public class AESUtil {
     private static final String KEY_ALGORITHM = "AES";
     private static final String DEFAULT_CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";//默认的加密算法
 

@@ -1,4 +1,4 @@
-package com.gs.common.util;
+package com.gs.common.utils;
 
 import java.util.BitSet;
 
@@ -6,7 +6,7 @@ import java.util.BitSet;
  * Created by linjuntan on 2017/11/12.
  * email: ljt1343@gmail.com
  */
-public class ByteConvertUtils {
+public class ByteConvertUtil {
     public static byte[] shortToByteArray(short s) {
         byte[] res = new byte[2];
         res[1] = (byte)(s & 0xff);

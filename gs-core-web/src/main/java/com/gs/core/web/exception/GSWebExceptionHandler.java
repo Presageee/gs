@@ -24,7 +24,7 @@ public class GSWebExceptionHandler implements WebExceptionHandler {
 
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
-        if (ex instanceof BaseWebException) {
+//        if (ex instanceof BaseWebException) {
             exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
             exchange.getResponse().getHeaders().add(HttpHeaders.CONTENT_TYPE, "application/json");
             DataBuffer dataBuffer = exchange.getResponse().bufferFactory().allocateBuffer();
@@ -37,7 +37,7 @@ public class GSWebExceptionHandler implements WebExceptionHandler {
             }
             exchange.getResponse().writeWith(Mono.just(dataBuffer));
             exchange.getResponse().setComplete();
-        }
+//        }
         return Mono.error(ex);
     }
 }

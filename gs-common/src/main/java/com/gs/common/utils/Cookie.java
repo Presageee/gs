@@ -1,4 +1,4 @@
-package com.gs.common.util;
+package com.gs.common.utils;
 
 import lombok.Data;
 
@@ -26,17 +26,17 @@ public class Cookie {
                 .append("=")
                 .append(value);
 
-        if (!CommonUtils.isNull(expired)) {
+        if (!CommonUtil.isNull(expired)) {
             builder.append(";Max-Age=")
                     .append(expired);
         }
 
-        if (!CommonUtils.isNull(domain)) {
+        if (!CommonUtil.isNull(domain)) {
             builder.append(";Domain=")
                     .append(domain);
         }
 
-        if (!CommonUtils.isNull(path)) {
+        if (!CommonUtil.isNull(path)) {
             builder.append(";Path=")
                     .append(path);
         }

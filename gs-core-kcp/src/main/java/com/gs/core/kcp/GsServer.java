@@ -77,6 +77,7 @@ public class GsServer extends KcpServer {
 
     @Override
     public void handleClose(KcpOnUdp kcpOnUdp) {
+        //todo
         log.info("客户端离开:" + kcpOnUdp);
         log.info("waitSnd:" + kcpOnUdp.getKcp().waitSnd());
     }

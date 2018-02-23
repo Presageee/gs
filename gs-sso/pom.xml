@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.gs</groupId>
-            <artifactId>gs-core-web</artifactId>
+            <artifactId>gs-core-web-mvc</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -35,6 +35,10 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
         </dependency>
     </dependencies>
 

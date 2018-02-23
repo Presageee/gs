@@ -10,9 +10,11 @@ import lombok.Data;
  */
 @Data
 public class UserBo {
-    private int id;
+    private Integer id;
 
     private String passport;
+
+    private String password;
 
     private String username;
 
@@ -35,8 +37,6 @@ public class UserBo {
 
     @Date
     private String lastLogoutTime;
-
-    private Long sensitive;
 
     private Integer locked;
 
