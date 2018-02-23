@@ -4,6 +4,7 @@ import com.gs.sso.constant.SsoConstant;
 import com.gs.sso.controller.bo.UserBo;
 import com.gs.sso.controller.dto.LoginDto;
 import com.gs.sso.service.SsoService;
+import com.gs.sso.utils.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,21 +48,9 @@ public class SsoController {
 
     @PutMapping("/logout")
     public ResponseEntity<Void> logout() {
-        ssoService.logout(getToken());
+        ssoService.logout(CookieUtil.getToken(request));
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    private String getToken() {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            return null;
-        }
 
-        for (Cookie cookie : cookies) {
-            if (SsoConstant.SSO_TOKEN.equals(cookie.getName())) {
-                return cookie.getValue();
-            }
-        }
-        return null;
-    }
 }

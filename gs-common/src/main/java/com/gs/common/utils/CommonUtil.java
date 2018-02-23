@@ -23,12 +23,12 @@ public class CommonUtil {
     }
 
     public static boolean isBlank(String str) {
-        return str != null && "".equals(str);
+        return str == null || "".equals(str);
     }
 
     public static boolean isBlank(String ...strs) {
         for (String s : strs) {
-            if (s != null && "".equals(s)) {
+            if (s == null || "".equals(s)) {
                 return true;
             }
         }
