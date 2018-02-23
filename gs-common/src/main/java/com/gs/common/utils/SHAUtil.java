@@ -1,4 +1,4 @@
-package com.gs.common.util;
+package com.gs.common.utils;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -6,7 +6,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  * Created by linjuntan on 2017/10/29.
  * email: ljt1343@gmail.com
  */
-public class SHAUtils {
+public class SHAUtil {
     private final String salt = "server!@#";
 
     public String encode(String code) {

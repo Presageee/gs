@@ -1,6 +1,6 @@
 package com.gs.core;
 
-import com.gs.common.util.AESUtils;
+import com.gs.common.utils.AESUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.DatagramPacket;
@@ -86,7 +86,7 @@ public class ServerContext {
             return;
         }
 
-        byte[] encryptData = AESUtils.encrypt(data);
+        byte[] encryptData = AESUtil.encrypt(data);
         if (encryptData == null) return;
 
         channel.writeAndFlush(new DatagramPacket(Unpooled.copiedBuffer(encryptData), sender));

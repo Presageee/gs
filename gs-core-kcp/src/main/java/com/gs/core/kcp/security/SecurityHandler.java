@@ -1,6 +1,6 @@
 package com.gs.core.kcp.security;
 
-import com.gs.common.util.AESUtils;
+import com.gs.common.utils.AESUtil;
 
 /**
  * Created by linjuntan on 2018/1/28.
@@ -9,10 +9,10 @@ import com.gs.common.util.AESUtils;
 public class SecurityHandler {
 
     public static byte[] decrypt(byte[] data) {
-        return AESUtils.decrypt(data);
+        return AESUtil.decrypt(data);
     }
 
     public static byte[] encrypt(byte[] data) {
-        return AESUtils.encrypt(data);
+        return AESUtil.encrypt(data);
     }
 }

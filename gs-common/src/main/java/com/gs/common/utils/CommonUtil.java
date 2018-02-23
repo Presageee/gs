@@ -1,4 +1,4 @@
-package com.gs.common.util;
+package com.gs.common.utils;
 
 import java.util.UUID;
 
@@ -6,7 +6,7 @@ import java.util.UUID;
  * Created by linjuntan on 2018/2/16.
  * email: ljt1343@gmail.com
  */
-public class CommonUtils {
+public class CommonUtil {
     public static boolean isNull(Object obj) {
         return obj == null;
     }

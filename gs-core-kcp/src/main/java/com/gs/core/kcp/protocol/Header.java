@@ -1,9 +1,8 @@
 package com.gs.core.kcp.protocol;
 
 
-import com.gs.common.util.ByteConvertUtils;
+import com.gs.common.utils.ByteConvertUtil;
 import com.gs.core.kcp.constant.KcpConstants;
-import org.beykery.jkcp.KcpClient;
 
 import java.util.BitSet;
 
@@ -93,7 +92,7 @@ public class Header {
 
     //sessionId to bit,control to bit,payload to bit,length to bit
     private BitSet sessionIdToBitSet() {
-        return ByteConvertUtils.intToBitSet(sessionId);
+        return ByteConvertUtil.intToBitSet(sessionId);
     }
 
     private BitSet bitSetToSessionIdBit(BitSet middleBit) {
@@ -111,7 +110,7 @@ public class Header {
     }
 
     private BitSet controlToBitSet() {
-        BitSet original = ByteConvertUtils.intToBitSet(control);
+        BitSet original = ByteConvertUtil.intToBitSet(control);
 
         BitSet controlBit = new BitSet();
         for (int i = 29; i < 32; i++) {
@@ -139,7 +138,7 @@ public class Header {
     }
 
     private BitSet businessIdToBitSet() {
-        BitSet original = ByteConvertUtils.intToBitSet(businessId);
+        BitSet original = ByteConvertUtil.intToBitSet(businessId);
 
         BitSet businessBit = new BitSet();
         for (int i = 22; i < 32; i++) {
@@ -167,7 +166,7 @@ public class Header {
     }
 
     private BitSet payloadToBitSet() {
-        BitSet original = ByteConvertUtils.intToBitSet(payload);
+        BitSet original = ByteConvertUtil.intToBitSet(payload);
 
         BitSet payloadBit = new BitSet();
         for (int i = 29; i < 32; i++) {
@@ -237,7 +236,7 @@ public class Header {
             index++;
         }
 
-        return ByteConvertUtils.bitSetToByte(bits);
+        return ByteConvertUtil.bitSetToByte(bits);
     }
 
     private void decodeMiddleBitSet(BitSet middleBit) {
@@ -246,14 +245,14 @@ public class Header {
         BitSet businessIdSet = bitSetToBusinessIdSet(middleBit);
         BitSet payloadBit = bitSetToPayloadBit(middleBit);
 
-        sessionId = ByteConvertUtils.BitSetToInt(sessionIdBit);
-        control = ByteConvertUtils.BitSetToInt(controlBit);
-        payload = ByteConvertUtils.BitSetToInt(payloadBit);
+        sessionId = ByteConvertUtil.BitSetToInt(sessionIdBit);
+        control = ByteConvertUtil.BitSetToInt(controlBit);
+        payload = ByteConvertUtil.BitSetToInt(payloadBit);
     }
 
     public byte[] encode() {
-        byte[] magicByte = ByteConvertUtils.shortToByteArray(magic);
-        byte[] lengthByte = ByteConvertUtils.intToByteArray(length);
+        byte[] magicByte = ByteConvertUtil.shortToByteArray(magic);
+        byte[] lengthByte = ByteConvertUtil.intToByteArray(length);
         byte[] middleByte = mergeBitSet();
 
         byte[] head = new byte[12];
@@ -280,7 +279,7 @@ public class Header {
         System.arraycopy(head, index, magicByte, 0, 2);
         index += 2;
 
-        short tmpMagic = ByteConvertUtils.byteToShort(magicByte);
+        short tmpMagic = ByteConvertUtil.byteToShort(magicByte);
         if (tmpMagic != magic) {
             throw new DecodePacketException();
         }
@@ -288,11 +287,11 @@ public class Header {
         byte[] middleByte = new byte[6];
         System.arraycopy(head, index, middleByte, 0, 6);
         index += 6;
-        decodeMiddleBitSet(ByteConvertUtils.byteToBitSet(middleByte));
+        decodeMiddleBitSet(ByteConvertUtil.byteToBitSet(middleByte));
 
         byte[] lengthByte = new byte[4];
         System.arraycopy(head, index, lengthByte, 0, 4);
-        length = ByteConvertUtils.byteToInt(lengthByte);
+        length = ByteConvertUtil.byteToInt(lengthByte);
     }
 
     public void validate() throws DecodePacketException {

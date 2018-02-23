@@ -14,7 +14,14 @@ public interface UserMapper {
      * @param password 密码
      * @return detail
      */
-    User getUserByPassport(@Param("passport") String passport, @Param("password") String password);
+    User getUserByPassportAndPassword(@Param("passport") String passport, @Param("password") String password);
+
+    /**
+     * 根据账号获取用户信息
+     * @param passport 根据账号获取用户信息
+     * @return
+     */
+    User getUserByPassport(@Param("passport") String passport);
 
     /**
      * 根据id获取用户信息
@@ -31,6 +38,13 @@ public interface UserMapper {
     String getPasswordByPassport(@Param("passport") String passport);
 
     /**
+     * 获取passport是否存在
+     * @param passport passport
+     * @return
+     */
+    Integer getCountByPassport(@Param("passport") String passport);
+
+    /**
      * 新建用户
      * @param user 信息
      */
@@ -41,4 +55,17 @@ public interface UserMapper {
      * @param user 信息
      */
     void updateUser(@Param("user") User user);
+
+    /**
+     * 更新登录信息
+     * @param user
+     */
+    void updateInfo(@Param("user") User user);
+
+    /**
+     * 更新登出时间
+     * @param time
+     * @param passport
+     */
+    void updateLogoutTime(@Param("logoutTime") Long time, @Param("passport") String passport);
 }

@@ -1,6 +1,6 @@
 package com.gs.core.kcp;
 
-import com.gs.common.util.ReflectUtils;
+import com.gs.common.utils.ReflectUtil;
 import com.gs.core.kcp.filterchain.Filter;
 import com.gs.core.kcp.filterchain.InputFilterChain;
 import com.gs.core.kcp.filterchain.OutputFilterChain;
@@ -134,7 +134,7 @@ public class KcpConfiguration {
             return new DefaultPacketInHandler();
         }
 
-        return (PacketInHandler) ReflectUtils.createObjectByClassName(inputHandler);
+        return (PacketInHandler) ReflectUtil.createObjectByClassName(inputHandler);
     }
 
     private PacketOutHandler createOutHandler() {
@@ -147,7 +147,7 @@ public class KcpConfiguration {
             return new DefaultPackOutHandler();
         }
 
-        return (PacketOutHandler) ReflectUtils.createObjectByClassName(outputHandler);
+        return (PacketOutHandler) ReflectUtil.createObjectByClassName(outputHandler);
     }
 
     private InputFilterChain createInputFilterChain() {
@@ -163,7 +163,7 @@ public class KcpConfiguration {
             }
 
             ifc.getInFilters()
-                    .add((Filter) ReflectUtils.createObjectByClassName(filter));
+                    .add((Filter) ReflectUtil.createObjectByClassName(filter));
         }
 
         return ifc;
@@ -182,7 +182,7 @@ public class KcpConfiguration {
             }
 
             ofc.getOutFilters()
-                    .add((Filter) ReflectUtils.createObjectByClassName(filter));
+                    .add((Filter) ReflectUtil.createObjectByClassName(filter));
         }
 
         return ofc;

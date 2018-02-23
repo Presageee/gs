@@ -43,7 +43,6 @@ public class SsoController {
     public ResponseEntity<UserBo> login(@RequestBody LoginDto dto, HttpServletResponse response) {
         UserBo userBo = ssoService.login(dto.getPassport(), dto.getPassword(), response);
         return new ResponseEntity<>(userBo, HttpStatus.OK);
-
     }
 
     @PutMapping("/logout")
