@@ -41,9 +41,9 @@ public class SsoServiceImpl implements SsoService {
         }
 
         User user = new User();
-        user.setPassword(MD5Utils.encode(user.getPassword()));
         ReflectUtils.convertObject(userBo, user);
 
+        user.setPassword(MD5Utils.encode(user.getPassword()));
         userMapper.insertUser(user);
     }
 
@@ -85,11 +85,6 @@ public class SsoServiceImpl implements SsoService {
 
         userBo.setToken(token);
 
-//        ResponseCookie cookie = ResponseCookie.from(SSO_TOKEN, token).domain("")
-//                .maxAge(Duration.ofHours(TOKEN_EXPIRE_HOURS))
-//                .path("/")
-//                .secure(false)
-//                .httpOnly(true).build();
         Cookie cookie = new Cookie(SSO_TOKEN, token);
         cookie.setDomain("");
         cookie.setMaxAge((int) (TOKEN_EXPIRE_HOURS * 60 * 60));
@@ -98,6 +93,7 @@ public class SsoServiceImpl implements SsoService {
         cookie.setHttpOnly(true);
 
         response.addCookie(cookie);
+        //todo update login info
 
         return userBo;
     }

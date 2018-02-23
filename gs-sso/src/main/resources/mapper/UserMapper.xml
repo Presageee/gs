@@ -16,17 +16,16 @@
         <result column="loginTime" property="loginTime" />
         <result column="lastLoginTime" property="lastLoginTime" />
         <result column="lastLogoutTime" property="lastLogoutTime"/>
-        <result column="sensitive" property="sensitive" />
         <result column="locked" property="locked"/>
         <result column="type" property="type"/>
     </resultMap>
 
     <sql id="insert">
-        passport, password, username, email, phone, createTime, loginIp, lastLoginIp, loginTime, lastLoginTime, lastLogoutTime,sensitive, locked, type
+        passport, password, username, email, phone, createTime, loginIp, lastLoginIp, loginTime, lastLoginTime, lastLogoutTime,  locked, type
     </sql>
 
     <sql id="selectDetail">
-        id, passport, username, email, phone,createTime, loginIp, lastLoginIp, loginTime, lastLoginTime, lastLogoutTime,sensitive, locked, type
+        id, passport, username, email, phone,createTime, loginIp, lastLoginIp, loginTime, lastLoginTime, lastLogoutTime, locked, type
     </sql>
 
     <select id="getUserByPassport" resultMap="DataResult">
@@ -61,7 +60,7 @@
           username=#{user.username},password=#{user.password}, email=#{user.email}, phone=#{user.phone}, loginIp=#{user.loginIp},
           lastLoginIp=#{user.lastLoginIp}, loginTime=#{user.loginTime},
           lastLoginTime=#{user.lastLoginTime}, lastLogoutTime=#{lastLogoutTime},
-          sensitive=#{user.sensitive}, locked=#{user.locked}, type =#{user.type}
+           locked=#{user.locked}, type =#{user.type}
           WHERE passport=#{user.passport}
         ]]>
     </update>
@@ -69,13 +68,12 @@
 
     <insert id="insertUser" parameterType="com.gs.sso.entity.User">
         <![CDATA[
-          INSERT INTO UniqueUser
-          (
-        ]]>
+          INSERT INTO UniqueUser (
+          ]]>
         <include refid="insert"/>
         <![CDATA[
-          ) VALUES (#{user.passport}, #{user.password},#{user.username}, #{user.email}, #{user.phone}, #{user.createTime}, #{user.loginIp}, #{user.lastLoginIp},
-          #{user.loginTime}, #{user.lastLoginTime}, #{user.lastLogoutTime}, #{user.sensitive}, #{user.locked}, #{user.type})
+          )
+           VALUES (#{user.passport}, #{user.password},#{user.username}, #{user.email}, #{user.phone}, #{user.createTime}, #{user.loginIp}, #{user.lastLoginIp},#{user.loginTime}, #{user.lastLoginTime}, #{user.lastLogoutTime},  #{user.locked}, #{user.type})
         ]]>
     </insert>
 

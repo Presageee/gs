@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 public class User {
-    private int id;
+    private Integer id;
 
     private String passport;
 
@@ -36,8 +36,6 @@ public class User {
 
     @Timestamp
     private Long lastLogoutTime;
-
-    private Long sensitive;
 
     private Integer locked;
 

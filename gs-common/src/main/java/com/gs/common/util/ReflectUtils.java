@@ -44,10 +44,10 @@ public class ReflectUtils {
      */
     @SuppressWarnings("unchecked")
     public static <S, D> void convertObject(S src, D dest) {
-        Field[] destFields = dest.getClass().getFields();
+        Field[] destFields = dest.getClass().getDeclaredFields();
         Arrays.asList(destFields).forEach(df -> {
             try {
-                Field sf = src.getClass().getField(df.getName());
+                Field sf = src.getClass().getDeclaredField(df.getName());
 
                 sf.setAccessible(true);
                 df.setAccessible(true);
