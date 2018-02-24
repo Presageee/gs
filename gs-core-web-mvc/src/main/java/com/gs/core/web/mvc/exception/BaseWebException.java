@@ -16,7 +16,11 @@ public class BaseWebException extends RuntimeException {
 
     public BaseWebException(String code, String msg) {
         msgMap.putIfAbsent("code", code);
-        msgMap.putIfAbsent("msg", msg);
+        msgMap.putIfAbsent("errMsg", msg);
+    }
+
+    public ErrorEntity toErrorEntity() {
+        return new ErrorEntity(msgMap.get("code"), msgMap.get("errMsg"));
     }
 
     @Override

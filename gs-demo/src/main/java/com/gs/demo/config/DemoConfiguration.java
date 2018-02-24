@@ -1,5 +1,6 @@
 package com.gs.demo.config;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -7,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
  * date: 2018/2/22
  */
 @Configuration
-//@MapperScan("com.gs.demo.dao")
+@MapperScan("com.gs.demo.dao")
 public class DemoConfiguration {
 
 }

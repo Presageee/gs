@@ -58,6 +58,21 @@ public class TomcatServer {
      */
     public static List<String> filterUris;
 
+    /**
+     * max upload file size,default 2m
+     */
+    public static int maxFileSize = 2097152;
+
+    /**
+     * max single request upload file size, default 2m
+     */
+    public static int maxRequestFileSize = 2097152;
+
+    /**
+     * open cors filter
+     */
+    public static boolean openCorsFilter;
+
     public TomcatServer() {
         init();
     }
@@ -92,6 +107,9 @@ public class TomcatServer {
         baseDir = config.getConfigProperty("server.base.dir", "");
         contextPath = config.getConfigProperty("server.context.path", "/");
         scanPack = config.getConfigProperty("spring.scan.path", "com.gs");
+        maxFileSize = config.getConfigIntProperty("server.max.file.size", 2097152);
+        maxRequestFileSize = config.getConfigIntProperty("server.max.request.file.size", 2097152);
+        openCorsFilter = Boolean.valueOf(config.getConfigProperty("server.open.cors", "false"));
 
         String filterStr = config.getConfigProperty("server.custom.filters", "");
         if (!"".equals(filterStr)) {

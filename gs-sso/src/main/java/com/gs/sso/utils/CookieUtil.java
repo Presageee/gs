@@ -1,6 +1,6 @@
 package com.gs.sso.utils;
 
-import com.gs.sso.constant.SsoConstant;
+import com.gs.sso.config.SsoConstant;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

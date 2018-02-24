@@ -7,4 +7,5 @@ import com.gs.demo.entity.Hello;
  * date: 2018/2/22
  */
 public interface HelloMapper {
+    Hello getById(int id);
 }

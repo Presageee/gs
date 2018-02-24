@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
-//    @Autowired
+    @Autowired
     private HelloMapper helloMapper;
 
-    @GetMapping("/demo")
-    public String hello() {
-        return "hellowrold";
+    @GetMapping(value = "/demo")
+    public Hello hello() {
+        return helloMapper.getById(1);
     }
 
 //    @GetMapping(value = "/demo2")

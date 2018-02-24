@@ -19,8 +19,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.gs.sso.constant.SsoConstant.*;
-import static com.gs.sso.constant.SsoErrorCode.*;
+import static com.gs.sso.config.SsoConstant.*;
+import static com.gs.sso.config.SsoErrorCode.*;
 
 /**
  * Created by linjuntan on 2018/2/16.
@@ -81,12 +81,27 @@ public class SsoServiceImpl implements SsoService {
         User user = userMapper.getUserByPassportAndPassword(passport, MD5Util.encode(password));
         if (CommonUtil.isNull(user)) {
             log.error(" >>> passport and password not match");
-            throw new BaseWebException(USER_NOT_EXISTS.getVal(), USER_NOT_EXISTS.name());
+            throw new BaseWebException(PASSPORT_OR_PASSWORD_ERROR.getVal(), PASSPORT_OR_PASSWORD_ERROR.name());
         }
 
         String token = CommonUtil.getUUID();
 
-        String ret = cacheProxy.setex(String.format(CACHE_SSO_TOKEN_KEY, token), (int) TOKEN_EXPIRE_TIME, JSON.toJSONString(user));
+        String loginKey = String.format(CACHE_SSO_LOGIN_KEY, user.getPassport());
+        if (cacheProxy.exists(loginKey)) {
+            String oldToken = cacheProxy.get(loginKey);
+            //delete old login token
+            cacheProxy.del(oldToken);
+        }
+        String newTokenKey = String.format(CACHE_SSO_TOKEN_KEY, token);
+
+        String loginKeyRet = cacheProxy.setex(loginKey, (int) TOKEN_EXPIRE_TIME, newTokenKey);
+        if (CommonUtil.isNull(loginKeyRet)) {
+            log.warn(" >>> save token to cache error, user => {}", user.toString());
+            throw new BaseWebException(SET_CACHE_ERROR.getVal(), SET_CACHE_ERROR.name());
+        }
+
+        String ret = cacheProxy.setex(newTokenKey,
+                (int) TOKEN_EXPIRE_TIME, JSON.toJSONString(user));
 
         if (CommonUtil.isNull(ret)) {
             log.warn(" >>> save token to cache error, user => {}", user.toString());
