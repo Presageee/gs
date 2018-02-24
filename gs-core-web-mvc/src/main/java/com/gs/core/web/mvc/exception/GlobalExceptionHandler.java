@@ -23,6 +23,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorEntity> handleResourceNotFoundException(NoHandlerFoundException nhre) {
         log.error(nhre.getMessage());
         return new ResponseEntity<>(new ErrorEntity(String.valueOf(HttpStatus.NOT_FOUND.value()),
@@ -35,7 +36,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorEntity> illegalParamsExceptionHandler(Exception ex) {
        log.error(ex.getMessage(), ex);
        return new ResponseEntity<>(new ErrorEntity(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()),
-               MESSAGE_500), HttpStatus.INTERNAL_SERVER_ERROR);
+               String.format(MESSAGE_500, ex.getMessage())), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(value = BaseWebException.class)
