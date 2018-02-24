@@ -3,22 +3,21 @@ package com.gs.core.web.mvc.tomcat;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.gs.config.ApplicationContextHolder;
+import com.gs.core.web.mvc.interceptor.GsInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * author: linjuntan
@@ -27,6 +26,10 @@ import java.util.List;
 @EnableWebMvc
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
+
+    @Autowired
+    private ApplicationContextHolder contextHolder;
+
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
@@ -64,4 +67,18 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         return new StandardServletMultipartResolver();
     }
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        Map<String, GsInterceptor> gsInterceptors = contextHolder.getBeanOfType(GsInterceptor.class);
+
+        List<GsInterceptor> interceptors = new ArrayList<>(gsInterceptors.size());
+        gsInterceptors.forEach((k, v) -> interceptors.add(v));
+
+        //sort by order
+        interceptors.stream()
+                .sorted(Comparator.comparing(GsInterceptor::getOrder))
+                .forEach(interceptor ->
+                        registry.addInterceptor(interceptor)
+                                .addPathPatterns(interceptor.getPathPatterns()));
+    }
 }

@@ -14,4 +14,10 @@ public class SsoConstant {
     public static final long TOKEN_EXPIRE_TIME = 60 * 60 * 12;
 
     public static final long TOKEN_EXPIRE_HOURS = 12;
+
+    public static final String NO_LOGIN = "noLogin";
+
+    public static final String READ_CACHE_ERROR = "readCacheError";
+
+    public static final String WRITE_CACHE_ERROR = "writeCacheError";
 }

@@ -27,9 +27,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static com.gs.sso.config.SsoConstant.CACHE_SSO_LOGIN_KEY;
-import static com.gs.sso.config.SsoConstant.CACHE_SSO_TOKEN_KEY;
-import static com.gs.sso.config.SsoConstant.TOKEN_EXPIRE_TIME;
+import static com.gs.sso.config.SsoConstant.*;
 
 /**
  * author: linjuntan
@@ -38,13 +36,6 @@ import static com.gs.sso.config.SsoConstant.TOKEN_EXPIRE_TIME;
 @Slf4j
 @Component
 public class LoginTokenFilter implements Filter {
-
-    private static final String NO_LOGIN = "noLogin";
-
-    private static final String READ_CACHE_ERROR = "readCacheError";
-
-    private static final String WRITE_CACHE_ERROR = "writeCacheError";
-
     private static final String CACHE_FILTER_URI_KEY = "loginToken_filter_uri";
 
     @Autowired
@@ -119,7 +110,7 @@ public class LoginTokenFilter implements Filter {
     }
 
     private void initErrorMap() {
-        errorMap = new HashMap<>(2);
+        errorMap = new HashMap<>(3);
 
         ErrorEntity noLogin = new ErrorEntity(SsoErrorCode.NO_LOGIN.getVal(), SsoErrorCode.NO_LOGIN.name());
         ErrorEntity readCacheError = new ErrorEntity(SsoErrorCode.READ_CACHE_ERROR.getVal(), SsoErrorCode.READ_CACHE_ERROR.name());
