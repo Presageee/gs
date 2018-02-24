@@ -8,13 +8,14 @@
         <version>0.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <name>gs-common</name>
-    <artifactId>gs-common</artifactId>
+    <name>gs-inner-sso</name>
+    <artifactId>gs-inner-sso</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
+            <groupId>com.gs</groupId>
+            <artifactId>gs-core-web-mvc</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

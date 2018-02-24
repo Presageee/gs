@@ -1,4 +1,4 @@
-package com.gs.sso.constant;
+package com.gs.sso.config;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Configuration;

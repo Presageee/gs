@@ -8,6 +8,7 @@
     <artifactId>gs</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1</version>
+    <name>gs</name>
     <modules>
         <module>gs-core-v1</module>
         <module>gs-cache</module>
@@ -20,6 +21,8 @@
         <module>gs-sso</module>
         <module>gs-demo</module>
         <module>gs-core-web-mvc</module>
+        <module>gs-inner-sso</module>
+        <module>gs-pay</module>
     </modules>
 
     <properties>
@@ -260,5 +263,13 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus</id>
+            <name>nexusRep</name>
+            <url>http://139.199.208.116:38081/content/repositories/releases</url>
+        </repository>
+    </distributionManagement>
 
 </project>

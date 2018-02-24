@@ -7,10 +7,7 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
+import javax.servlet.*;
 
 /**
  * author: linjuntan
@@ -23,18 +20,29 @@ public class AppInitializer implements WebApplicationInitializer {
         context.setConfigLocation(TomcatServer.scanPack);
         servletContext.addListener(new ContextLoaderListener(context));
 
+
+
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter("UTF-8", true);
 
-        ServletRegistration.Dynamic dispatcher = servletContext.addServlet("spring", new DispatcherServlet(context));
+        DispatcherServlet servlet = new DispatcherServlet(context);
+        servlet.setThrowExceptionIfNoHandlerFound(true);
+
+        ServletRegistration.Dynamic dispatcher = servletContext.addServlet("spring", servlet);
         dispatcher.setLoadOnStartup(1);
         dispatcher.addMapping("/*");
+        dispatcher.setMultipartConfig(new MultipartConfigElement("", TomcatServer.maxFileSize, TomcatServer.maxRequestFileSize, 0));
 
         FilterRegistration.Dynamic encodingFilter =  servletContext.addFilter("characterEncodingFilter", characterEncodingFilter);
         encodingFilter.addMappingForUrlPatterns(null, false, "/*");
 
+        if (TomcatServer.openCorsFilter) {
+            servletContext.addFilter("csrfFilter", org.springframework.web.filter.DelegatingFilterProxy.class)
+                    .addMappingForUrlPatterns(null, false, "/*");
+        }
+
         if (TomcatServer.openTokenFilter) {
-            FilterRegistration.Dynamic loginTokenFilter =  servletContext.addFilter("loginTokenFilter", characterEncodingFilter);
-            loginTokenFilter.addMappingForUrlPatterns(null, false, "/*");
+            servletContext.addFilter("loginTokenFilter", org.springframework.web.filter.DelegatingFilterProxy.class)
+                    .addMappingForUrlPatterns(null, false, "/*");
         }
 
         if (TomcatServer.customFilters != null && TomcatServer.customFilters.size() > 0) {
