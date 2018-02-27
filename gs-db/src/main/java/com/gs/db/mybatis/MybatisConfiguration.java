@@ -29,9 +29,6 @@ import java.util.List;
  */
 @Configuration
 public class MybatisConfiguration {
-//    @Autowired
-//    private PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer;
-
     @Value("${db.name:test}")
     private String dbName;
 

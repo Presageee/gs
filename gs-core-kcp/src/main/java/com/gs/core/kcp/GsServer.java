@@ -34,6 +34,10 @@ public class GsServer extends KcpServer {
     @Setter
     private OutputFilterChain outputFilterChain;
 
+    @Getter
+    @Setter
+    private OnlineCounter onlineCounter;
+
 
     public GsServer(int port, int workerSize) {
         super(port, workerSize);
@@ -77,7 +81,11 @@ public class GsServer extends KcpServer {
 
     @Override
     public void handleClose(KcpOnUdp kcpOnUdp) {
-        //todo
+        //remove cache
+        GsContext.removeCountSetElement(kcpOnUdp.getRemote());
+        //update count
+        onlineCounter.asyncUpdateOnlineCount();
+
         log.info("客户端离开:" + kcpOnUdp);
         log.info("waitSnd:" + kcpOnUdp.getKcp().waitSnd());
     }

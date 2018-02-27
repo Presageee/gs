@@ -6,4 +6,6 @@ package com.gs.core.kcp.constant;
  */
 public class KcpConstants {
     public static final short MAGIC = 0xff;
+
+    public static final String ONLINE_COUNT_KEY = "app_%s_online_count";
 }

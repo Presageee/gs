@@ -1,12 +1,15 @@
 package com.gs.core.kcp;
 
+import com.gs.cache.CacheProxy;
 import com.gs.common.utils.ReflectUtil;
 import com.gs.core.kcp.filterchain.Filter;
 import com.gs.core.kcp.filterchain.InputFilterChain;
+import com.gs.core.kcp.filterchain.OnlineStatisticsFilter;
 import com.gs.core.kcp.filterchain.OutputFilterChain;
 import com.gs.core.kcp.handler.DefaultPackOutHandler;
 import com.gs.core.kcp.handler.DefaultPacketInHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -101,6 +104,17 @@ public class KcpConfiguration {
     @Value("${kcp.out.filters:}")
     private String outputFilter = "";
 
+    @Value("${app.name:kcp}")
+    private String appName;
+
+    @Autowired
+    private CacheProxy cacheProxy;
+
+    @Bean
+    public OnlineCounter onlineCounter() {
+        return new OnlineCounter(cacheProxy, appName);
+    }
+
     @Bean
     public GsServer gsServer() {
         GsServer gs = new GsServer(port, workSize);
@@ -119,10 +133,14 @@ public class KcpConfiguration {
         gs.setOutHandler(createOutHandler());
         gs.setOutputFilterChain(createOutputFilterChain());
 
+        gs.setOnlineCounter(onlineCounter());
+
         GsContext.setGsServer(gs);
 
         return gs;
     }
+
+
 
     private PacketInHandler createInHandler() {
         if (defaultHandler) {
@@ -152,6 +170,11 @@ public class KcpConfiguration {
 
     private InputFilterChain createInputFilterChain() {
         InputFilterChain ifc = new InputFilterChain();
+
+        OnlineStatisticsFilter onlineCountFilter = new OnlineStatisticsFilter();
+        onlineCountFilter.setOnlineCounter(onlineCounter());
+        ifc.getInFilters().add(onlineCountFilter);
+
         if (StringUtils.isEmpty(inputFilter)) {
             return ifc;
         }
