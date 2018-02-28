@@ -36,7 +36,7 @@ public class HelloInnerSsoController {
 
     @GetMapping(value = "/innerUser/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Integer id){
-        User user=helloService.getUserById(id);
+        User user=helloService.getRoleListByUserId(id);
         return new ResponseEntity<User>(user,HttpStatus.OK);
     }
 

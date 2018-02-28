@@ -20,23 +20,15 @@
         <result column="type" property="type"/>
     </resultMap>
 
-    <resultMap type="com.gs.inner.sso.entity.User" id="DataResultWithRole">
+    <resultMap type="com.gs.inner.sso.entity.User" id="RoleResult">
         <result column="id" property="id" />
         <result column="passport" property="passport" />
         <result column="password" property="password" />
         <result column="username" property="username" />
         <result column="email" property="email"/>
         <result column="phone" property="phone"/>
-        <result column="createTime" property="createTime" />
-        <result column="loginIp" property="loginIp"/>
-        <result column="lastLoginIp" property="lastLoginIp"/>
-        <result column="loginTime" property="loginTime" />
-        <result column="lastLoginTime" property="lastLoginTime" />
-        <result column="lastLogoutTime" property="lastLogoutTime"/>
-        <result column="locked" property="locked"/>
-        <result column="type" property="type"/>
-        <collection property="roleList" ofType="Role" >
-            <id column="id" property="id" />
+        <collection property="roleList" ofType="Role" columnPrefix="role">
+            <id column="id" property="id"/>
             <result column="roleName" property="roleName" />
         </collection>
     </resultMap>
@@ -81,12 +73,12 @@
     </select>
 
     <!--todo-->
-    <select id="getUserWithRoleById" resultMap="DataResultWithRole">
+    <select id="getRoleByUserId" resultMap="RoleResult">
         <![CDATA[
           SELECT
-            id, passport, username, email, phone,createTime, loginIp, lastLoginIp, loginTime, lastLoginTime, lastLogoutTime, locked, type,
-           FROM InnerUser U left outer join InnerRole A on B.author_id = A.id
-           where U.id=#{id}
+            id, passport, username, email, phone
+           FROM (InnerUser iu,InnerRole ir) LEFT JOIN InnerUserRoleRelation iurr ON iu.id = iurel.id AND ir.id = iurel.inerrole_id
+           WHERE iu.id=#{id}
         ]]>
     </select>
 
@@ -123,11 +115,13 @@
 
     <!--todo 修改用户角色-->
     <update id="updateUserRole" parameterType="com.gs.inner.sso.entity.User">
-        <![CDATA[
-          UPDATE InnerUserRoleRelation SET
-          roleList=#{user.roleList}
-          WHERE passport=#{user.passport}
-        ]]>
+        <foreach collection="roleList" item="item" index="index" open="" close="" separator=";">
+            update InnerUserRoleRelation
+            <set>
+                innerrole_id=${item.id}
+            </set>
+            where inneruser_id = ${user.id}
+        </foreach>
     </update>
 
     <update id="updateLogoutTime">

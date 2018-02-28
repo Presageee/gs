@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * author: theonelee
  * date: 2018/2/28
@@ -46,5 +48,10 @@ public class HelloServiceImpl implements HelloService{
     @Override
     public Role getRoleById(Integer id) {
         return roleMapper.getRoleById(id);
+    }
+
+    @Override
+    public User getRoleListByUserId(Integer id) {
+        return userMapper.getRoleByUserId(id);
     }
 }

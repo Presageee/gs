@@ -3,6 +3,8 @@ package com.gs.inner.sso.service;
 import com.gs.inner.sso.entity.Role;
 import com.gs.inner.sso.entity.User;
 
+import java.util.List;
+
 
 /**
  * 测试自己写的User和Role的方法是否能运作
@@ -20,4 +22,6 @@ public interface HelloService {
     void createRole(Role role);
 
     Role getRoleById(Integer id);
+
+    User getRoleListByUserId(Integer id);
 }

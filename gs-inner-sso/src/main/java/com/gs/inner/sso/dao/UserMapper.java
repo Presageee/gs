@@ -31,6 +31,13 @@ public interface UserMapper {
     User getUserById(@Param("id") int id);
 
     /**
+     * 根据id获取用户角色List 且附带部分用户信息
+     * @param id id
+     * @return detail
+     */
+    User getRoleByUserId(@Param("id") int id);
+
+    /**
      * 根据账号获取密码
      * @param passport 账号
      * @return 密码
@@ -74,4 +81,6 @@ public interface UserMapper {
      * @param user
      */
     void updateUserRole(@Param("user") User user);
+
+
 }
