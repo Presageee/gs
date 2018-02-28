@@ -60,7 +60,7 @@ public class ChcekLoginInterceptor extends GsInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info(" >>> in check login interceptor");
-        if (handler instanceof HandlerMethod) {
+        if (handler instanceof HandlerMethod) {//todo 这部分判断的意义？method.getBean().getClass()和handler.getClass()区别在哪？
             HandlerMethod method = (HandlerMethod) handler;
             if (method.getBean().getClass()
                     .isAnnotationPresent(CheckLogin.class)) {
