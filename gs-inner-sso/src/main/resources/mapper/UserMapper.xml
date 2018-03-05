@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.gs.inner.sso.dao.UserMapper">
-    <resultMap type="com.gs.inner.sso.entity.User" id="DataResult">
+<mapper namespace="com.gs.inner.sso.dao.InnerUserMapper">
+    <resultMap type="com.gs.inner.sso.entity.InnerUser" id="DataResult">
         <result column="id" property="id" />
         <result column="passport" property="passport" />
         <result column="password" property="password" />
@@ -20,7 +20,7 @@
         <result column="type" property="type"/>
     </resultMap>
 
-    <resultMap type="com.gs.inner.sso.entity.User" id="RoleResult">
+    <resultMap type="com.gs.inner.sso.entity.InnerUser" id="RoleResult">
         <result column="id" property="id" />
         <result column="passport" property="passport" />
         <result column="password" property="password" />
@@ -94,33 +94,33 @@
         ]]>
     </select>
 
-    <update id="updateUser" parameterType="com.gs.inner.sso.entity.User">
+    <update id="updateUser" parameterType="com.gs.inner.sso.entity.InnerUser">
         <![CDATA[
           UPDATE InnerUser SET
-          username=#{user.username}, email=#{user.email}, phone=#{user.phone},
-           locked=#{user.locked}, type =#{user.type}
-          WHERE passport=#{user.passport}
+          username=#{innerUser.username}, email=#{innerUser.email}, phone=#{innerUser.phone},
+           locked=#{innerUser.locked}, type =#{innerUser.type}
+          WHERE passport=#{innerUser.passport}
         ]]>
     </update>
 
-    <update id="updateInfo" parameterType="com.gs.inner.sso.entity.User">
+    <update id="updateInfo" parameterType="com.gs.inner.sso.entity.InnerUser">
         <![CDATA[
         UPDATE InnerUser SET
-        loginIp=#{user.loginIp},
-          lastLoginIp=#{user.lastLoginIp}, loginTime=#{user.loginTime},
-          lastLoginTime=#{user.lastLoginTime}, lastLogoutTime=#{user.lastLogoutTime}
-          WHERE passport=#{user.passport}
+        loginIp=#{innerUser.loginIp},
+          lastLoginIp=#{innerUser.lastLoginIp}, loginTime=#{innerUser.loginTime},
+          lastLoginTime=#{innerUser.lastLoginTime}, lastLogoutTime=#{innerUser.lastLogoutTime}
+          WHERE passport=#{innerUser.passport}
         ]]>
     </update>
 
     <!--todo 修改用户角色-->
-    <update id="updateUserRole" parameterType="com.gs.inner.sso.entity.User">
+    <update id="updateUserRole" parameterType="com.gs.inner.sso.entity.InnerUser">
         <foreach collection="roleList" item="item" index="index" open="" close="" separator=";">
             update InnerUserRoleRelation
             <set>
                 innerrole_id=${item.id}
             </set>
-            where inneruser_id = ${user.id}
+            where inneruser_id = ${innerUser.id}
         </foreach>
     </update>
 
@@ -133,14 +133,14 @@
     </update>
 
 
-    <insert id="insertUser" parameterType="com.gs.inner.sso.entity.User">
+    <insert id="insertUser" parameterType="com.gs.inner.sso.entity.InnerUser">
         <![CDATA[
           INSERT INTO InnerUser (
           ]]>
         <include refid="insert"/>
         <![CDATA[
           )
-           VALUES (#{user.passport}, #{user.password},#{user.username}, #{user.email}, #{user.phone}, #{user.createTime}, #{user.loginIp}, #{user.lastLoginIp},#{user.loginTime}, #{user.lastLoginTime}, #{user.lastLogoutTime},  #{user.locked}, #{user.type},#{user.roleList})
+           VALUES (#{innerUser.passport}, #{innerUser.password},#{innerUser.username}, #{innerUser.email}, #{innerUser.phone}, #{innerUser.createTime}, #{innerUser.loginIp}, #{innerUser.lastLoginIp},#{innerUser.loginTime}, #{innerUser.lastLoginTime}, #{innerUser.lastLogoutTime},  #{innerUser.locked}, #{innerUser.type},#{innerUser.roleList})
         ]]>
     </insert>
 

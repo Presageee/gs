@@ -10,7 +10,7 @@ import java.util.List;
  * date: 2018/2/28
  */
 @Data
-public class User{
+public class InnerUser {
     private Integer id;
 
     private String passport;

@@ -1,9 +1,7 @@
 package com.gs.inner.sso.service;
 
+import com.gs.inner.sso.entity.InnerUser;
 import com.gs.inner.sso.entity.Role;
-import com.gs.inner.sso.entity.User;
-
-import java.util.List;
 
 
 /**
@@ -13,15 +11,15 @@ import java.util.List;
  */
 public interface HelloService {
 
-    void createUser(User user);
+    void createUser(InnerUser innerUser);
 
-    void updateUser(User user);
+    void updateUser(InnerUser innerUser);
 
-    User getUserById(Integer id);
+    InnerUser getUserById(Integer id);
 
     void createRole(Role role);
 
     Role getRoleById(Integer id);
 
-    User getRoleListByUserId(Integer id);
+    InnerUser getRoleListByUserId(Integer id);
 }

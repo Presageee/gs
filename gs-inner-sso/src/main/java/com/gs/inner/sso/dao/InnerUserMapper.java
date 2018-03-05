@@ -1,41 +1,41 @@
 package com.gs.inner.sso.dao;
 
-import com.gs.inner.sso.entity.User;
+import com.gs.inner.sso.entity.InnerUser;
 import org.apache.ibatis.annotations.Param;
 
 /**
  * author: theonelee
  * date: 2018/2/28
  */
-public interface UserMapper {
+public interface InnerUserMapper {
     /**
      * 根据账号密码获取用户信息
      * @param passport 账号
      * @param password 密码
      * @return detail
      */
-    User getUserByPassportAndPassword(@Param("passport") String passport, @Param("password") String password);
+    InnerUser getUserByPassportAndPassword(@Param("passport") String passport, @Param("password") String password);
 
     /**
      * 根据账号获取用户信息
      * @param passport 根据账号获取用户信息
      * @return
      */
-    User getUserByPassport(@Param("passport") String passport);
+    InnerUser getUserByPassport(@Param("passport") String passport);
 
     /**
      * 根据id获取用户信息
      * @param id id
      * @return detail
      */
-    User getUserById(@Param("id") int id);
+    InnerUser getUserById(@Param("id") int id);
 
     /**
      * 根据id获取用户角色List 且附带部分用户信息
      * @param id id
      * @return detail
      */
-    User getRoleByUserId(@Param("id") int id);
+    InnerUser getRoleByUserId(@Param("id") int id);
 
     /**
      * 根据账号获取密码
@@ -53,21 +53,21 @@ public interface UserMapper {
 
     /**
      * 新建用户
-     * @param user 信息
+     * @param innerUser 信息
      */
-    void insertUser(@Param("user") User user);
+    void insertUser(@Param("innerUser") InnerUser innerUser);
 
     /**
      * 修改用户信息
-     * @param user 信息
+     * @param innerUser 信息
      */
-    void updateUser(@Param("user") User user);
+    void updateUser(@Param("innerUser") InnerUser innerUser);
 
     /**
      * 更新登录信息
-     * @param user
+     * @param innerUser
      */
-    void updateInfo(@Param("user") User user);
+    void updateInfo(@Param("innerUser") InnerUser innerUser);
 
     /**
      * 更新登出时间
@@ -78,9 +78,9 @@ public interface UserMapper {
 
     /**
      * 修改用户角色
-     * @param user
+     * @param innerUser
      */
-    void updateUserRole(@Param("user") User user);
+    void updateUserRole(@Param("innerUser") InnerUser innerUser);
 
 
 }

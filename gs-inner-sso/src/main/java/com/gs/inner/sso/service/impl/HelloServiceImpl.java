@@ -1,15 +1,13 @@
 package com.gs.inner.sso.service.impl;
 
 import com.gs.inner.sso.dao.RoleMapper;
-import com.gs.inner.sso.dao.UserMapper;
+import com.gs.inner.sso.dao.InnerUserMapper;
+import com.gs.inner.sso.entity.InnerUser;
 import com.gs.inner.sso.entity.Role;
-import com.gs.inner.sso.entity.User;
 import com.gs.inner.sso.service.HelloService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * author: theonelee
@@ -20,24 +18,24 @@ import java.util.List;
 public class HelloServiceImpl implements HelloService{
 
     @Autowired
-    private UserMapper userMapper;
+    private InnerUserMapper innerUserMapper;
 
     @Autowired
     private RoleMapper roleMapper;
 
     @Override
-    public void createUser(User user) {
-        userMapper.insertUser(user);
+    public void createUser(InnerUser innerUser) {
+        innerUserMapper.insertUser(innerUser);
     }
 
     @Override
-    public void updateUser(User user) {
-        userMapper.updateUser(user);
+    public void updateUser(InnerUser innerUser) {
+        innerUserMapper.updateUser(innerUser);
     }
 
     @Override
-    public User getUserById(Integer id) {
-        return userMapper.getUserById(id);
+    public InnerUser getUserById(Integer id) {
+        return innerUserMapper.getUserById(id);
     }
 
     @Override
@@ -51,7 +49,7 @@ public class HelloServiceImpl implements HelloService{
     }
 
     @Override
-    public User getRoleListByUserId(Integer id) {
-        return userMapper.getRoleByUserId(id);
+    public InnerUser getRoleListByUserId(Integer id) {
+        return innerUserMapper.getRoleByUserId(id);
     }
 }

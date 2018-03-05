@@ -1,7 +1,7 @@
 package com.gs.inner.sso.controller;
 
+import com.gs.inner.sso.entity.InnerUser;
 import com.gs.inner.sso.entity.Role;
-import com.gs.inner.sso.entity.User;
 import com.gs.inner.sso.service.HelloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,21 +23,21 @@ public class HelloInnerSsoController {
     private HttpServletRequest request;
 
     @PostMapping(value = "/innerUser")
-    public ResponseEntity<Void> createUser(@RequestBody User user) {
-        helloService.createUser(user);
+    public ResponseEntity<Void> createUser(@RequestBody InnerUser innerUser) {
+        helloService.createUser(innerUser);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     @PutMapping(value = "/innerUser")
-    public ResponseEntity<Void> modifyUser(@RequestBody User user) {
-        helloService.updateUser(user);
+    public ResponseEntity<Void> modifyUser(@RequestBody InnerUser innerUser) {
+        helloService.updateUser(innerUser);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     @GetMapping(value = "/innerUser/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id){
-        User user=helloService.getRoleListByUserId(id);
-        return new ResponseEntity<User>(user,HttpStatus.OK);
+    public ResponseEntity<InnerUser> getUserById(@PathVariable Integer id){
+        InnerUser innerUser =helloService.getRoleListByUserId(id);
+        return new ResponseEntity<InnerUser>(innerUser,HttpStatus.OK);
     }
 
 
