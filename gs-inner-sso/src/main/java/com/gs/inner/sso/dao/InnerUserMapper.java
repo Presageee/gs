@@ -1,7 +1,10 @@
 package com.gs.inner.sso.dao;
 
 import com.gs.inner.sso.entity.InnerUser;
+import com.gs.inner.sso.entity.Role;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * author: theonelee
@@ -36,6 +39,13 @@ public interface InnerUserMapper {
      * @return detail
      */
     InnerUser getRoleByUserId(@Param("id") int id);
+
+    /**
+     * 根据passport获取用户角色List 且附带部分用户信息
+     * @param passport
+     * @return detail
+     */
+    InnerUser getRoleByUserPassport(@Param("passport") String passport);
 
     /**
      * 根据账号获取密码
@@ -77,10 +87,10 @@ public interface InnerUserMapper {
     void updateLogoutTime(@Param("logoutTime") Long time, @Param("passport") String passport);
 
     /**
-     * 修改用户角色
-     * @param innerUser
+     * 根据passport，修改用户角色
+     * @param roleList
      */
-    void updateUserRole(@Param("innerUser") InnerUser innerUser);
+    void updateUserRole(@Param("passport") String passport,@Param("roleList") List<Role> roleList);
 
 
 }

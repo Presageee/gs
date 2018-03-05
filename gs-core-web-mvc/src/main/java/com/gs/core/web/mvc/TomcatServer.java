@@ -49,12 +49,12 @@ public class TomcatServer {
     public static List<String> customFilters;
 
     /**
-     * open token filter
+     * open token aspect
      */
     public static boolean openTokenFilter = false;
 
     /**
-     * filter uri
+     * aspect uri
      */
     public static List<String> filterUris;
 
@@ -69,7 +69,7 @@ public class TomcatServer {
     public static int maxRequestFileSize = 2097152;
 
     /**
-     * open cors filter
+     * open cors aspect
      */
     public static boolean openCorsFilter;
 
@@ -118,7 +118,7 @@ public class TomcatServer {
             customFilters = null;
         }
 
-        String uris = config.getConfigProperty("server.filter.uris", "login,logout,user");
+        String uris = config.getConfigProperty("server.aspect.uris", "login,logout,user");
         filterUris = Arrays.asList(uris.split(",")).stream().map(e -> contextPath + e).collect(Collectors.toList());
 
         systemId = config.getConfigProperty("systemId");
