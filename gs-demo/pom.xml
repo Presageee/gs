@@ -12,9 +12,14 @@
     <artifactId>gs-demo</artifactId>
 
     <dependencies>
+        <!--<dependency>-->
+            <!--<groupId>com.gs</groupId>-->
+            <!--<artifactId>gs-sso</artifactId>-->
+            <!--<version>0.0.1</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.gs</groupId>
-            <artifactId>gs-sso</artifactId>
+            <artifactId>gs-inner-sso</artifactId>
             <version>0.0.1</version>
         </dependency>
         <!--<dependency>-->
