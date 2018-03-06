@@ -5,15 +5,20 @@
 <mapper namespace="com.gs.inner.sso.dao.RoleMapper">
     <resultMap type="com.gs.inner.sso.entity.Role" id="DataResult">
         <result column="id" property="id" />
-        <result column="roleName" property="roleName" />
+        <result column="accessUrl" property="accessUrl" />
+
+        <result column="createTime" property="createTime" />
+        <result column="lastUpdateTime" property="lastUpdateTime" />
+        <result column="lastUpdateInnerUserId" property="lastUpdateInnerUserId" />
+        <result column="locked" property="locked" />
     </resultMap>
 
     <sql id="insert">
-        roleName
+        accessUrl,createTime,lastUpdateTime,lastUpdateInnerUserId,locked
     </sql>
 
     <sql id="selectDetail">
-        id, roleName
+        id, accessUrl,createTime,lastUpdateTime,lastUpdateInnerUserId,locked
     </sql>
 
     <select id="getRoleById" resultMap="DataResult">
@@ -32,11 +37,21 @@
         ]]>
     </select>
 
+    <!--todo-->
+    <select id="getRoleAccessUrlList" resultType="java.util.List">
+        <![CDATA[
+          SELECT id,accessUrl,locked FROM InnerRole
+        ]]>
+    </select>
+
 
     <update id="updateRoleById" parameterType="com.gs.inner.sso.entity.Role">
         <![CDATA[
           UPDATE InnerRole SET
-          roleName=#{role.roleName}
+          accessUrl=#{role.accessUrl},
+          lastUpdateTime=#{role.lastUpdateTime},
+          lastUpdateInnerUserId=#{role.lastUpdateInnerUserId},
+          locked=#{role.locked}
           WHERE id=#{role.id}
         ]]>
     </update>
@@ -49,7 +64,7 @@
         <include refid="insert"/>
         <![CDATA[
           )
-           VALUES (#{role.roleName})
+           VALUES (#{role.accessUrl},#{role.createTime},#{role.lastUpdateTime},#{role.lastUpdateInnerUserId},#{role.lock})
         ]]>
     </insert>
 

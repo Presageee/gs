@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * author: theonelee
- * date: 2018/2/28
+ * date: 2018/3/6
  */
 @Data
 public class InnerUser {
@@ -44,5 +44,5 @@ public class InnerUser {
     private Integer type;
 
     //该用户具备的角色
-    private List<Role> roleList;
+    private Role role;
 }
