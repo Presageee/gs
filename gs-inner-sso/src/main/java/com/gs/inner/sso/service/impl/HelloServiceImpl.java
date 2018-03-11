@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  * author: theonelee
  * date: 2018/2/28
  */
-@Service
+@Service("helloService")
 @Slf4j
 public class HelloServiceImpl implements HelloService{
 

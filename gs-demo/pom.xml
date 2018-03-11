@@ -22,11 +22,11 @@
             <artifactId>gs-inner-sso</artifactId>
             <version>0.0.1</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.gs</groupId>-->
-            <!--<artifactId>gs-core-web-mvc</artifactId>-->
-            <!--<version>0.0.1</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.gs</groupId>
+            <artifactId>gs-core-web-mvc</artifactId>
+            <version>0.0.1</version>
+        </dependency>
     </dependencies>
 
 </project>

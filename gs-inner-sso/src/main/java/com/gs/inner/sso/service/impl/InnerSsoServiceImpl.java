@@ -30,7 +30,7 @@ import static com.gs.inner.sso.config.InnerSsoErrorCode.*;
  * date: 2018/3/1
  */
 @Slf4j
-@Service
+@Service("innerSsoService")
 public class InnerSsoServiceImpl implements InnerSsoService{
 
     @Autowired

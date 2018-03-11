@@ -29,13 +29,14 @@ public class InnerSsoController {
     @Autowired
     private HttpServletRequest request;
 
-    @PostMapping(value = "/inner/login")
+    @PostMapping(value = "/innerLogin")
     public ResponseEntity<InnerUserBo> login(@RequestBody InnerLoginDto dto, HttpServletResponse response) {
+        System.out.println("-------->call in inner user login");
         InnerUserBo userBo = innerSsoService.login(dto.getPassport(), dto.getPassword(), response);
         return new ResponseEntity<>(userBo, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/inner/logout")
+    @PutMapping(value = "/innerLogout")
     public ResponseEntity<Void> logout() {
         innerSsoService.logout(CookieUtil.getToken(request));
         return new ResponseEntity<Void>(HttpStatus.OK);
