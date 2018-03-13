@@ -1,6 +1,8 @@
 package com.gs.core.web.mvc.initializer;
 
 import com.gs.core.web.mvc.TomcatServer;
+import com.gs.core.web.mvc.filter.GsFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -8,11 +10,18 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * author: linjuntan
  * date: 2018/2/22
  */
+@Slf4j
 public class AppInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
@@ -47,7 +56,20 @@ public class AppInitializer implements WebApplicationInitializer {
 
         if (TomcatServer.customFilters != null && TomcatServer.customFilters.size() > 0) {
             TomcatServer.customFilters.forEach(e -> servletContext.addFilter(e, org.springframework.web.filter.DelegatingFilterProxy.class)
-                    .addMappingForUrlPatterns(null, false, "/*"));
+                    .addMappingForUrlPatterns(null, false, getFilterUrl(e)));
         }
+
+    }
+
+    private String getFilterUrl(String e){
+        try {
+            Class<GsFilter> c= (Class<GsFilter>) Class.forName(e);
+            Method m=c.getMethod("getPathPatterns");
+            return (String) m.invoke(c.newInstance());
+        } catch (Exception e1) {
+            log.error(" >>> get filter url error");
+            e1.printStackTrace();
+        }
+        return "/*";
     }
 }

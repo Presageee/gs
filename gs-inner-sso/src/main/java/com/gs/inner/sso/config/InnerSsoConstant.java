@@ -16,11 +16,11 @@ public class InnerSsoConstant {
 
     public static final long TOKEN_EXPIRE_HOURS = 12;
 
-    public static final String NO_LOGIN = "noLogin";
+    public static final String NO_LOGIN = "innerUserNoLogin";
 
-    public static final String NO_PERMISSION = "noPermission";
+    public static final String NO_PERMISSION = "innerUserNoPermission";
 
-    public static final String READ_CACHE_ERROR = "readCacheError";
+    public static final String READ_CACHE_ERROR = "innerUserReadCacheError";
 
-    public static final String WRITE_CACHE_ERROR = "writeCacheError";
+    public static final String WRITE_CACHE_ERROR = "innerUserWriteCacheError";
 }

@@ -46,7 +46,7 @@ public class LoginTokenFilter implements Filter {
     private ScheduledExecutorService service;
 
     @Value("#{'${server.filter.uri:/login,/logout,/user}'.split(',')}")
-    private List<String> filterUris;
+    private List<String> filterUris;//不需要被拦截的url
 
     @PostConstruct
     public void initFilter() {

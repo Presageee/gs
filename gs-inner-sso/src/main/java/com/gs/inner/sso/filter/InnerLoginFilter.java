@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.gs.cache.CacheProxy;
 import com.gs.common.utils.CommonUtil;
 import com.gs.core.web.mvc.exception.ErrorEntity;
+import com.gs.core.web.mvc.filter.GsFilter;
 import com.gs.inner.sso.config.InnerSsoErrorCode;
 import com.gs.inner.sso.entity.InnerUser;
 import com.gs.inner.sso.utils.CookieUtil;
@@ -36,7 +37,7 @@ import static com.gs.inner.sso.config.InnerSsoConstant.*;
  */
 @Slf4j
 @Component
-public class InnerLoginFilter implements Filter{
+public class InnerLoginFilter implements GsFilter{
 
     private static final String CACHE_FILTER_URI_KEY = "innerLoginToken_filter_uri";
 
@@ -54,6 +55,11 @@ public class InnerLoginFilter implements Filter{
     public void initFilter() {
         initErrorMap();
         initScheduleTask();
+    }
+
+    @Override
+    public String[] getPathPatterns()  {
+        return new String[] {"/*"};
     }
 
     @Override
@@ -164,4 +170,6 @@ public class InnerLoginFilter implements Filter{
             service.scheduleAtFixedRate(this::updateFilterUri, 0, 60, TimeUnit.SECONDS);
         }
     }
+
+
 }
