@@ -48,7 +48,7 @@ public class InnerLoginFilter implements GsFilter{
 
     private ScheduledExecutorService service;
 
-    @Value("#{'${server.inner.filter.uri:/innerLogin,/innerLogout,/innerUser}'.split(',')}")
+    @Value("#{'${server.inner.filter.uri:/inner/login,/inner/logout}'.split(',')}")
     private List<String> filterUris;
 
     @PostConstruct
@@ -59,7 +59,7 @@ public class InnerLoginFilter implements GsFilter{
 
     @Override
     public String[] getPathPatterns()  {
-        return new String[] {"/*"};
+        return new String[] {"/inner/*"};
     }
 
     @Override
