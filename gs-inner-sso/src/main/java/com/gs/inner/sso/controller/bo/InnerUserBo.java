@@ -45,7 +45,9 @@ public class InnerUserBo {
 
     private Integer type;
 
-    private List<Role> roleList;//role list
+    private Integer roleId;
+
+    private Role role;
 
     private String token;
 

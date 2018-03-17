@@ -48,8 +48,5 @@ public class HelloServiceImpl implements HelloService{
         return roleMapper.getRoleById(id);
     }
 
-    @Override
-    public InnerUser getRoleListByUserId(Integer id) {
-        return innerUserMapper.getRoleByUserId(id);
-    }
+
 }

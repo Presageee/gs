@@ -21,18 +21,22 @@
         <result column="roleId" property="roleId"/>
     </resultMap>
 
-    <!--<resultMap type="com.gs.inner.sso.entity.InnerUser" id="RoleResult">-->
-        <!--<result column="id" property="id" />-->
-        <!--<result column="passport" property="passport" />-->
-        <!--<result column="password" property="password" />-->
-        <!--<result column="username" property="username" />-->
-        <!--<result column="email" property="email"/>-->
-        <!--<result column="phone" property="phone"/>-->
-        <!--<collection property="roleList" ofType="Role">-->
-            <!--<id column="roleId" property="id"/>-->
-            <!--<result column="roleName" property="roleName" />-->
-        <!--</collection>-->
-    <!--</resultMap>-->
+    <resultMap type="com.gs.inner.sso.entity.InnerUser" id="RoleResult">
+        <result column="id" property="id" />
+        <result column="passport" property="passport" />
+        <result column="password" property="password" />
+        <result column="username" property="username" />
+        <result column="email" property="email"/>
+        <result column="phone" property="phone"/>
+        <association property="role">
+            <id column="id" property="id"/>
+            <result column="accessUrl" property="accessUrl" />
+            <result column="createTime" property="createTime" />
+            <result column="lastUpdateTime" property="lastUpdateTime" />
+            <result column="lastUpdateInnerUserId" property="lastUpdateInnerUserId" />
+            <result column="locked" property="locked" />
+        </association>
+    </resultMap>
 
     <sql id="insert">
         passport, password, username, email, phone, createTime, loginIp, lastLoginIp, loginTime, lastLoginTime, lastLogoutTime,  locked, type, roleId
@@ -73,24 +77,6 @@
         ]]>
     </select>
 
-    <!--&lt;!&ndash;todo&ndash;&gt;-->
-    <!--<select id="getRoleByUserId" resultMap="RoleResult">-->
-        <!--<![CDATA[-->
-          <!--SELECT-->
-            <!--iu.id, passport, username, email, phone,roleName-->
-           <!--FROM (InnerUser iu,InnerRole ir) LEFT JOIN InnerUserRoleRelation iurr ON iu.id = iurel.id AND ir.id = iurel.inerrole_id-->
-           <!--WHERE iu.id=#{id}-->
-        <!--]]>-->
-    <!--</select>-->
-
-    <!--<select id="getRoleByUserPassport" resultMap="RoleResult">-->
-        <!--<![CDATA[-->
-          <!--SELECT-->
-            <!--iu.id, passport, username, email, phone,roleName-->
-           <!--FROM (InnerUser iu,InnerRole ir) LEFT JOIN InnerUserRoleRelation iurr ON iu.id = iurel.id AND ir.id = iurel.inerrole_id-->
-           <!--WHERE iu.passport=#{passport}-->
-        <!--]]>-->
-    <!--</select>-->
 
     <select id="getPasswordByPassport" resultType="java.lang.String">
         <![CDATA[
@@ -108,7 +94,7 @@
         <![CDATA[
           UPDATE InnerUser SET
           username=#{innerUser.username}, email=#{innerUser.email}, phone=#{innerUser.phone},
-           locked=#{innerUser.locked}, type =#{innerUser.type}
+           locked=#{innerUser.locked}, type =#{innerUser.type}, roleId =#{innerUser.roleId}
           WHERE passport=#{innerUser.passport}
         ]]>
     </update>
@@ -141,11 +127,18 @@
         <include refid="insert"/>
         <![CDATA[
           )
-           VALUES (#{innerUser.passport}, #{innerUser.password},#{innerUser.username}, #{innerUser.email}, #{innerUser.phone}, #{innerUser.createTime}, #{innerUser.loginIp}, #{innerUser.lastLoginIp},#{innerUser.loginTime}, #{innerUser.lastLoginTime}, #{innerUser.lastLogoutTime},  #{innerUser.locked}, #{innerUser.type},#{innerUser.role})
+           VALUES (#{innerUser.passport}, #{innerUser.password},#{innerUser.username}, #{innerUser.email}, #{innerUser.phone}, #{innerUser.createTime}, #{innerUser.loginIp}, #{innerUser.lastLoginIp},#{innerUser.loginTime}, #{innerUser.lastLoginTime}, #{innerUser.lastLogoutTime},  #{innerUser.locked}, #{innerUser.type},#{innerUser.roleId})
         ]]>
     </insert>
 
-    <!--todo 修改用户角色-->
+    <!--todo 查innerUser时一并把关联的Role详情也查出来-->
+    <select id="getUserWithRoleById" resultMap="RoleResult">
+        <![CDATA[
+          SELECT
+            iu.id, passport, username, email, phone,roleId, ir.id,accessUrl,createTime,lastUpdateTime,lastUpdateInnerUserId,lock
+           FROM (InnerUser iu,InnerRole ir) WHERE iu.roleId = ir.id
+        ]]>
+    </select>
 
 
 </mapper>

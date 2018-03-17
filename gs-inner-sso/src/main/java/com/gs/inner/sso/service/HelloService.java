@@ -21,5 +21,4 @@ public interface HelloService {
 
     Role getRoleById(Integer id);
 
-    InnerUser getRoleListByUserId(Integer id);
 }

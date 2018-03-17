@@ -43,6 +43,8 @@ public class InnerUser {
 
     private Integer type;
 
+    private Integer roleId;
+
     //该用户具备的角色
     private Role role;
 }
