@@ -21,6 +21,10 @@
         id, accessUrl,createTime,lastUpdateTime,lastUpdateInnerUserId,locked
     </sql>
 
+    <delete id="deleteRoleById">
+        DELETE FROM InnerRole WHERE id=#{id}
+    </delete>
+
     <select id="getRoleById" resultMap="DataResult">
         <![CDATA[
           SELECT
@@ -31,16 +35,14 @@
         ]]>
     </select>
 
-    <select id="getRoleList" resultType="java.util.List">
-        <![CDATA[
-          SELECT * FROM InnerRole
-        ]]>
-    </select>
 
-    <!--todo-->
-    <select id="getRoleAccessUrlList" resultType="java.util.List">
+    <select id="getRoleList" resultType="com.gs.inner.sso.entity.Role">
         <![CDATA[
-          SELECT id,accessUrl,locked FROM InnerRole
+        SELECT
+        ]]>
+            <include refid="selectDetail"/>
+         <![CDATA[
+         FROM InnerRole
         ]]>
     </select>
 

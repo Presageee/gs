@@ -24,7 +24,7 @@ public class SsoController {
     private SsoService ssoService;
 
     @Autowired
-    private HttpServletRequest request;//todo 测试下客户端a登陆后将token给客户端b时，能否正常登陆
+    private HttpServletRequest request;
 
     @PostMapping(value = "/user")
     public ResponseEntity<Void> createUser(@RequestBody UserBo bo) {

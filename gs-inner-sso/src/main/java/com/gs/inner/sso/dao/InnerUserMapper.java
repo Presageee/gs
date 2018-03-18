@@ -86,11 +86,7 @@ public interface InnerUserMapper {
      */
     void updateLogoutTime(@Param("logoutTime") Long time, @Param("passport") String passport);
 
-    /**
-     * 根据passport，修改用户角色
-     * @param roleList
-     */
-    void updateUserRole(@Param("passport") String passport,@Param("roleList") List<Role> roleList);
 
 
+    void getUserWithRoleById(@Param("id") int id);
 }

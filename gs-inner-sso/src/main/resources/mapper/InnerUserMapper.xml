@@ -131,12 +131,11 @@
         ]]>
     </insert>
 
-    <!--todo 查innerUser时一并把关联的Role详情也查出来-->
     <select id="getUserWithRoleById" resultMap="RoleResult">
         <![CDATA[
           SELECT
             iu.id, passport, username, email, phone,roleId, ir.id,accessUrl,createTime,lastUpdateTime,lastUpdateInnerUserId,lock
-           FROM (InnerUser iu,InnerRole ir) WHERE iu.roleId = ir.id
+           FROM (InnerUser iu,InnerRole ir) WHERE iu.roleId = ir.id AND iu.id= #{id}
         ]]>
     </select>
 

@@ -1,5 +1,6 @@
 package com.gs.demo.filter;
 
+import com.gs.core.web.mvc.filter.GsFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,7 @@ import java.io.IOException;
  */
 @Slf4j
 @Component
-public class HelloFilter implements Filter {
+public class HelloFilter implements GsFilter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -28,5 +29,10 @@ public class HelloFilter implements Filter {
     @Override
     public void destroy() {
 
+    }
+
+    @Override
+    public String[] getPathPatterns() {
+        return new String[]{"/*"};
     }
 }
