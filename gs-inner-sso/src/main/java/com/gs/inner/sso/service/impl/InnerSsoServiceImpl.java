@@ -71,24 +71,12 @@ public class InnerSsoServiceImpl implements InnerSsoService{
         user.setPhone(userBo.getPhone());
         user.setLocked(userBo.getLocked());
         user.setType(userBo.getType());
-        //user.setRoleList(userBo.getRoleList());
-
+        user.setRoleId(userBo.getRoleId());
+        //user.setRole(user.getRole());
 
         innerUserMapper.updateUser(user);
     }
 
-    @Override
-    public void updateUserRole(String passport, List<Role> roleList) {
-        if (CommonUtil.isNull(passport)||CommonUtil.isNull(roleList)) {
-            throw new BaseWebException(ARGS_IS_NULL.getVal(), ARGS_IS_NULL.name());
-        }
-        int count=innerUserMapper.getCountByPassport(passport);
-        if (count==0){
-            throw new BaseWebException(DATARESULT_IS_NULL.getVal(), DATARESULT_IS_NULL.name());
-        }
-
-        innerUserMapper.updateUserRole(passport,roleList);
-    }
 
     @Override
     public InnerUserBo login(String passport, String password, HttpServletResponse response) {

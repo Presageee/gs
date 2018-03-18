@@ -16,13 +16,6 @@ public interface InnerSsoService {
 
     void updateUser(InnerUserBo userBo);
 
-    /**
-     * 更新 innerUser role
-     * @param passport
-     * @param roleList
-     */
-    void updateUserRole(String passport, List<Role> roleList);
-
     InnerUserBo login(String passport, String password, HttpServletResponse response);
 
     void logout(String token);
