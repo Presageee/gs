@@ -23,6 +23,7 @@
         <module>gs-core-web-mvc</module>
         <module>gs-inner-sso</module>
         <module>gs-pay</module>
+        <module>gsbattlesystem</module>
     </modules>
 
     <properties>
