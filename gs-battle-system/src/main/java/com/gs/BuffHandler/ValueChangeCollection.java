@@ -48,7 +48,8 @@ public class ValueChangeCollection {
             for (ValueChange vc : m_priorities[x].m_valueChanges.values())
             {
                 eBuffPriority buffPriority;
-                if (m_typePriority.TryGetValue(vc.getValueType(), out buffPriority))//todo
+                buffPriority=m_typePriority.get(vc.getValueType());
+                if (m_typePriority.containsKey(vc.getValueType()))
                 {
                     if ((buffPriority.getVal() > vc.getM_belonger().getM_priority().getVal()))
                     {

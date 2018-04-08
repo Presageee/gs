@@ -1,4 +1,4 @@
-package com.gs.util;
+package com.gs.util.data;
 
 import lombok.Getter;
 import lombok.Setter;

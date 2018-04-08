@@ -25,6 +25,6 @@ public class ValueChange {
     }
 
     public float value(){
-      return getValue() * m_belonger.getM_level().getM_value();//todo IntWrapper issue
+      return getValue() * m_belonger.getM_level().getM_value();//todo IntWrapper issue 这类issue是我已经移植好了，但是不能确信这样的写法是否贴合原代码的语义。
     }
 }
