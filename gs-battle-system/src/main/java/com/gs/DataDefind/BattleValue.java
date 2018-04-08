@@ -35,11 +35,11 @@ public class BattleValue extends ValueWrapper {
         float lower = _AuthorityMatch(m_authority, eValueAuthority.Lower) ? min : Float.MIN_VALUE;
         float upper = _AuthorityMatch(m_authority, eValueAuthority.Upper) ? max : Float.MAX_VALUE;
         //m_value = Mathf.Clamp(next, lower, upper);
-        if (value<lower)
+        if (next<lower)
             m_value= lower;
-        if (value>upper)
+        if (next>upper)
             m_value= upper;
-        m_value= value;
+        m_value= next;
     }
 
     @Override
