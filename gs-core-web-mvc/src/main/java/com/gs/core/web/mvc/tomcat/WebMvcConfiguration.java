@@ -14,7 +14,9 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.io.IOException;
 import java.util.*;
@@ -80,5 +82,18 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .forEach(interceptor ->
                         registry.addInterceptor(interceptor)
                                 .addPathPatterns(interceptor.getPathPatterns()));
+    }
+
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("/inner/loginPage").setViewName("innerLogin");
+//    }
+//
+    @Bean
+    public InternalResourceViewResolver viewResolver(){
+        InternalResourceViewResolver viewResolver=new InternalResourceViewResolver();
+        viewResolver.setPrefix("/html");
+        viewResolver.setSuffix(".html");
+        return viewResolver;
     }
 }

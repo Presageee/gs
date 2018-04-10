@@ -57,7 +57,7 @@ public class AppInitializer implements WebApplicationInitializer {
 
         if (TomcatServer.customFilters != null && TomcatServer.customFilters.size() > 0) {
             TomcatServer.customFilters.forEach(e -> servletContext.addFilter(e, org.springframework.web.filter.DelegatingFilterProxy.class)
-                    .addMappingForUrlPatterns(null, false, getFilterUrl(e) ));//todo 将硬编码的"/*"替换为每个filter重写的getPathPatterns方法的值
+                    .addMappingForUrlPatterns(null, false, "/*" ));//todo 将硬编码的"/*"替换为每个filter重写的getPathPatterns方法的值
         }
 
     }

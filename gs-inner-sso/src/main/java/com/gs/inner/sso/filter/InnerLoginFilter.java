@@ -48,7 +48,7 @@ public class InnerLoginFilter implements GsFilter{
 
     private ScheduledExecutorService service;
 
-    @Value("#{'${server.inner.filter.uri:/inner/login,/inner/logout}'.split(',')}")
+    @Value("#{'${server.inner.filter.uri:/inner/login,/inner/logout,/inner/loginPage}'.split(',')}")
     private List<String> filterUris;
 
     @PostConstruct
